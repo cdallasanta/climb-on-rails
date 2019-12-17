@@ -1,0 +1,27 @@
+body.ropes {
+  background-color: rgb(73, 39, 6);
+  color: #272200;
+  background-image: none;
+}
+
+.ropes-section {
+  width: 90vw;
+  margin: 0 5vw;
+  background: rgba(185, 153, 9, 0.7);
+  padding: 10px;
+  border-radius: 20px;
+  border: 5px solid #242700;
+
+  input[type=submit] {
+    -moz-box-shadow: inset -3px -3px 10px #130C0D;
+    -webkit-box-shadow: inset -3px -3px 10px #130C0D;
+    box-shadow: inset -3px -3px 10px #130C0D;
+    background-color: #73452F;
+    color: white;
+    border-radius: 15px;
+    font-style: italic;
+    font-weight: bold;
+    padding: 10px 30px;
+    margin: 5px;
+  }
+}

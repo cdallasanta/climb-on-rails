@@ -1,0 +1,106 @@
+body.users {
+  background-color: #141F04;
+  background-image: url(ThunderCreek.JPG);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+#show-user-container {
+  background: rgba(27, 34, 17, .8);
+  border: 10px solid rgb(13,13,13);
+  color: #C0A88C;
+  width: 25vw;
+  height: 60vh;
+  border-radius: 20px;
+
+  // flexbos for aligning children roughly in center
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  //in order to vert and horiz align div
+  position: absolute;
+  // top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+#show-user-container a {
+  color: #C0A88C;
+}
+
+#show-user-container * {
+  text-align: center
+}
+
+/* Edit Form */
+#edit-user-container {
+  background: rgba(27, 34, 17, .8);
+  border: 10px solid rgb(13,13,13);
+  color: #C0A88C;
+  width: 75vw;
+  height: 85vh;
+  border-radius: 20px;
+
+  // flexbos for aligning children roughly in center
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  //in order to vert and horiz align div
+  position: absolute;
+  // top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+#edit-user-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+/* Fields */
+#edit-user-form input[type=password], #edit-user-form input[type=email] {
+  -moz-box-shadow: inset -3px -3px 10px #5B5A5E;
+  -webkit-box-shadow: inset -3px -3px 10px #5B5A5E;
+  box-shadow: inset -3px -3px 10px #5B5A5E;
+  border-radius: 15px;
+  padding: 5px;
+  margin: 5px;
+}
+
+/* Button */
+#edit-user-form input[type=submit] {
+  -moz-box-shadow: inset -3px -3px 10px #130C0D;
+  -webkit-box-shadow: inset -3px -3px 10px #130C0D;
+  box-shadow: inset -3px -3px 10px #130C0D;
+  background-color: #73452F;
+  color: white;
+  border-radius: 15px;
+  font-style: italic;
+  font-weight: bold;
+  padding: 10px 30px;
+  margin: 5px;
+}
+
+#edit-user-container a {
+  color: white;
+}
+
+#edit-user-container * {
+  text-align: center
+}
+
+i {
+  font-size: 80%;
+}
+
+label {
+  font-weight: bold;
+}

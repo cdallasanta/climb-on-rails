@@ -1,0 +1,41 @@
+<div id="periodic-inspection-background">
+  <%= form_for [inspection.element, inspection], :html => {:id => 'periodic-inspection-form'} do |f| %>
+    <%= errors_check(inspection) %>
+    <div class="form-group">
+      <%= f.label :date %>
+      <%= f.date_field :date, class: "form-control-sm", required: true %>
+    </div>
+    <div class="form-group">
+      <h2>Equipment</h2>
+      <%= raw @element.periodic_equipment_instructions %><br>
+      <div class="form-check">
+        <%= f.check_box :equipment_complete, class:"form-check-input" %>
+        <%= f.label "Section completed?", class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <h2>Element</h2>
+      <%= raw @element.periodic_element_instructions %><br>
+      <div class="form-check">
+        <%= f.check_box :element_complete, class:"form-check-input" %>
+        <%= f.label "Section completed?", class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <h2>Environment</h2>
+      <%= raw @element.periodic_environment_instructions %><br>
+      <div class="form-check">
+        <%= f.check_box :environment_complete, class:"form-check-input" %>
+        <%= f.label "Section completed?", class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= render partial: 'comments', locals: {f:f, inspection:@inspection} %>
+    </div>
+
+    <%= updated_by_div(@inspection) %>
+
+    <%= f.submit %>
+  <% end %>
+</div>

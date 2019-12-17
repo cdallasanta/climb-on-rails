@@ -1,0 +1,12 @@
+<%= form_for [@inspection.element, @inspection], :html=> {:id => 'preuse-inspection-form'}  do |f| %>
+  <div class="form-group">
+    <b>Date:</b> <%= f.date_field :date %>
+  </div>
+
+  <%= render partial: 'setup', locals: {setup: @inspection.setup, f: f} %>
+
+  <%= takedown_partial_if_exists(f) %>
+
+  <%= f.submit %>
+
+<% end %>

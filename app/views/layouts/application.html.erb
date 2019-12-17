@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ClimbOnRails</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <% if stylesheet_exists? %>
+      <%= stylesheet_link_tag params[:controller] %>
+    <% end %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class=<%= controller_name %>>
+    <header>
+      <%= render partial: 'layouts/header' %>
+    </header>
+
+    <div id="content">
+      <% if flash.alert %>
+        <div class="alert alert-warning">
+          <%= raw flash.alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+
+    <% if javascript_exists? %>
+      <%= javascript_include_tag params[:controller] %>
+    <% end %>
+  </body>
+</html>

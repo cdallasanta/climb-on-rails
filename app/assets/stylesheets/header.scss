@@ -1,0 +1,29 @@
+.header {
+  height: 7vh;
+  background-color: #61671B;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 0 5px 10px #61671B;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  z-index: 100;
+}
+
+.header > * {
+  margin: 0px 20px;
+}
+
+.header img {
+  height: 7vh;
+}
+
+.header a {
+  color: #AB9F55;
+  font-weight: bold;
+}

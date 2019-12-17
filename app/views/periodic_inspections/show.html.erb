@@ -1,0 +1,40 @@
+<%= form_for @inspection, url: edit_element_periodic_inspection_path(@element, @inspection), method: :get, :html => {:id => 'periodic-inspection-form'}  do |f| %>
+  <%= errors_check(@inspection) %>
+
+  <fieldset disabled>
+    <div class="form-group">
+      <%= f.label :date %>
+      <%= f.date_field :date, class: "form-control-sm" %>
+    </div>
+    <div class="periodic-instructions form-group">
+      <%= @element.periodic_equipment_instructions.html_safe %><br>
+      <div class="form-check">
+        <%= f.check_box :equipment_complete, class:"form-check-input" %>
+        <%= f.label "Section completed?", class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="periodic-instructions form-group">
+      <%= @element.periodic_element_instructions.html_safe %><br>
+      <div class="form-check">
+        <%= f.check_box :element_complete, class:"form-check-input" %>
+        <%= f.label "Section completed?", class: "form-check-label" %>
+      </div>
+    </div>
+    <div class="periodic-instructions form-group">
+      <%= @element.periodic_environment_instructions.html_safe %><br>
+      <div class="form-check">
+        <%= f.check_box :environment_complete, class:"form-check-input" %>
+        <%= f.label "Section completed?", class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= render partial: 'comments', locals: {f:f, inspection:@inspection} %>
+    </div>
+
+    <%= updated_by_div(@inspection) %>
+  </fieldset>
+
+  <%= f.submit "Edit this inspection" %>
+
+<% end %>

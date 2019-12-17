@@ -1,0 +1,24 @@
+<div id="edit-element">
+  <h2>Edit details for <%= @element.name %></h2>
+  <%= form_for @element do |f| %>
+    <%= errors_check(@element) %>
+
+    <div class="elements-section">
+      Element name: <%= f.text_field :name %>
+    </div>
+
+    <div class="elements-section">
+      <h3>Ropes</h3>
+      Note: Changing any existing ropes here will only rename that rope.<br>
+      To retire and replace a rope, go <%= link_to "here", element_path(@element) %><br>
+      <%= ropes_fields(f) %>
+    </div>
+
+    <div class="elements-section">
+      <h3>Instructions:</h3>
+      <%= render partial: 'instruction_forms', locals: {f: f} %>
+    </div>
+    
+    <%= f.submit %>
+  <% end %>
+</div>
