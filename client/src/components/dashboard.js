@@ -3,8 +3,10 @@ import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import "../stylesheets/table.scss";
+import "../stylesheets/dashboard.scss";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+// import {icons} from '../images/index';
 
 class Dashboard extends Component {
   state = {
@@ -37,14 +39,19 @@ class Dashboard extends Component {
     });
   }
 
+  // setImgURL = status => {
+  //   const iconUrls = icons
+  //   return iconUrls[status]
+  // }
+
   renderInspectionTable = () => {
     if (Object.keys(this.state.elements).length > 0){
       return Object.keys(this.state.elements).map((element, i) => {
         const elem = this.state.elements[element]
         return <div className="table-row" key={i}>
           <div className="td">{element}</div>
-          <div className="td">{elem.setup}</div>
-          <div className="td">{elem.takedown}</div>
+          <div className="td"><img src={require(`../images/${elem.setup}.png`)} className="statusIcon" alt={elem.setup} /></div>
+          <div className="td"><img src={require(`../images/${elem.takedown}.png`)} className="statusIcon" alt={elem.takedown} /></div>
           <div className="td"><NavLink to={`/admin/elements/${elem.id}`}>View Element</NavLink></div>
         </div>
       })
