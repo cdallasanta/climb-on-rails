@@ -24,10 +24,14 @@ class Dashboard extends Component {
   }
 
   updateState = () => {
+    this.setState({lastUpdated: "..."});
     axios.get(`/api/v1/sites/${this.props.currentUser.site_id}/status/${this.state.date}`)
     .then(response => this.setState({
       elements: response.data,
-      lastUpdated: Date.now()
+      lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {
+        hour: "numeric",
+        minute: "numeric"
+      })
     }))
     .catch(error => console.log(error))
   }
@@ -72,10 +76,7 @@ class Dashboard extends Component {
             {this.renderInspectionTable()}
           </div>
         </div>
-        Last updated: {new Date(this.state.lastUpdated).toLocaleTimeString("es-US", {
-          hour: "numeric",
-          minute: "numeric"
-        })}
+        Last updated: {this.state.lastUpdated}
       </div>
     )
   }
