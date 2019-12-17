@@ -3,7 +3,8 @@ import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import "../stylesheets/table.scss";
-import DatePicker from 'react-date-picker';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 class Dashboard extends Component {
   state = {
@@ -30,7 +31,7 @@ class Dashboard extends Component {
     .catch(error => console.log(error))
   }
 
-  handleChange = date => {
+  setDate = date => {
     this.setState({date: date}, () =>{
       this.updateState();
     });
@@ -53,7 +54,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard">
-      <DatePicker value={this.state.date} onChange={this.handleChange} />
+        <DatePicker selected={this.state.date} onChange={this.setDate} />
         <div className="table">
           <div className="table-head">
             <div className="th">Element</div>
