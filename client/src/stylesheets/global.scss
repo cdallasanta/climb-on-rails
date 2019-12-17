@@ -1,0 +1,73 @@
+html {
+  position: fixed;
+  overflow: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+html, body, #root, div.App, div.content {
+  height: 100%;
+  overflow: auto;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0px;
+}
+
+#logged-in-content {
+  background-color: rgb(42, 56, 22);
+  background-image: none;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+div#body {
+  position: relative;
+  margin: 10vh auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  bottom: 0px;
+}
+
+// alert boxes
+.alert {
+  width: 90%;
+  margin-top: 20px;
+  margin-right: 5%;
+  margin-left: 5%;
+  border-radius: 10px;
+
+  ul {
+    list-style-type: none;
+  }
+}
+
+.alert-success {
+  border: 3px solid darkgreen;
+  background-color: rgba(144, 238, 144, .8);
+  color: darkgreen;
+}
+
+.alert-danger {
+  border: 3px solid darkred;
+  background-color: rgba(255, 127, 80, .8);
+  color: darkred;
+}
+
+.alert-warning {
+  border: 3px solid SaddleBrown;
+  background-color: rgba(252, 248, 227, .8);
+  color: SaddleBrown;
+}
+
+.alert-info {
+  border: 3px solid DarkBlue;
+  background-color: rgba(100, 149, 237, .8) ;
+  color: DarkBlue;
+}
