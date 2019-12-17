@@ -5,29 +5,35 @@ const Section = ({data: {id, title, complete, comments_attributes}, newComment, 
   function renderComments() {
     const sortedComments = comments_attributes.sort((a,b) => a.id - b.id)
     return (
-      <div className="comments">
+      <div className={
+          `comments collapsible 
+          ${complete && sortedComments.length === 0 && newComment === "" ? "hidden":""}`}>
         <h3>Comments:</h3>
         {sortedComments.map((comment, i) =>{
           return (
-            <div className="instructions-text" key={i}>
+            <div className="comment" key={i}>
               <strong>{comment.user.fullname}: </strong>{comment.content}
             </div>
           )
         })}
-        <input type="textarea" name={title} value={newComment} onChange={handleChange} inspection={inspection} />
+        <input type="textarea" name={title} value={newComment} onChange={handleChange} inspection={inspection} className={`collapsible ${complete && newComment === "" ? "hidden":""}`} placeholder="New comment" />
       </div>
     )
   }
-
+  
   return(
     <div className={`form-group ${complete ? "complete":"incomplete"}`} id={`section-${id}`} >
       <h2>{title}</h2>
-      <div className="instructions-text">
-        {instructions}
+      <div className={`collapsible ${complete ? "hidden":""}`} >
+        <div className="instructions-text">
+          <ul>
+            {instructions.split('\n').map(line => {
+              return <li>{line}</li>
+            })}
+          </ul>
+        </div>
+
       </div>
-
-      {renderComments()}
-
       <div className="form-check completed-group">
         <label className="toggleButton">
           <input type="checkbox" checked={complete} onChange={handleChange} name={title} inspection={inspection} />
@@ -37,8 +43,10 @@ const Section = ({data: {id, title, complete, comments_attributes}, newComment, 
             </svg>
           </div>
         </label>
-        <label htmlFor={title} >Section Completed?</label>
+        <label htmlFor={title} className={`collapsible ${complete ? "hidden":""}`}>Section Completed?</label>
       </div>
+
+      {renderComments()}
     </div>
   )
 }

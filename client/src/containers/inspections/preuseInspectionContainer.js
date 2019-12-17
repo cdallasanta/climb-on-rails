@@ -14,7 +14,7 @@ class PreuseInspectionContainer extends Component {
           component={PreuseForm}
         />
         <Route path="/preuse_inspections"
-          component={ElementList} title="Preuse Inspections"
+          component={ElementList}
         />
       </Switch>
     )

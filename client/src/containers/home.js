@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import "../stylesheets/global.scss";
 import { Switch, Route, withRouter} from 'react-router-dom';
-import Dashboard from './dashboard';
+import AdminContainer from './admin';
 import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
 import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
 import Header from '../components/header';
@@ -58,8 +58,8 @@ class Home extends Component {
             <Route path="/periodic_inspections"
               component={PeriodicInspectionContainer}
             />
-            <Route path="/"
-              component={Dashboard}
+            <Route path="/admin"
+              component={AdminContainer}
             />
           </Switch>
         </div>

@@ -14,7 +14,7 @@ class PreuseInspectionSerializer < ActiveModel::Serializer
 
   
   def setup_attributes
-    SetupSerializer.new(object.setup, root: false)
+    SetupSerializer.new(object.setup)
   end
 
   def takedown_attributes

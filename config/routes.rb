@@ -5,7 +5,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:show, :create, :update]
 
-      resources :sites, only: [:show]
+      resources :sites, only: [:show] do
+        get '/status/:date', to: "sites#status"
+      end
 
       resources :elements, only: [:index, :show, :edit, :update] do
         # resources :ropes, only: [:new, :create, :update]

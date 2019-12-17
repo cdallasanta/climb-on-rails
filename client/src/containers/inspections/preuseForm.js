@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import '../../stylesheets/preuse_inspections.scss';
+import '../../stylesheets/inspection_forms.scss';
 import axios from 'axios';
 import Setup from '../../components/inspections/setup';
 import Takedown from '../../components/inspections/takedown';

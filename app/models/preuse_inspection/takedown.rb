@@ -27,4 +27,15 @@ class PreuseInspection::Takedown < ApplicationRecord
       self.climbs.create(rope: rope)
     end
   end
+
+  def status
+    if !self.sections.any?{|s| s.complete == false}
+      return "complete"
+    elsif self.sections.all?{|s| s.complete == false} &&
+        self.climbs.all?{|c| c.attributes.all? {|a| a == nil}}
+      return "not started"
+    else
+      return "incomplete"
+    end
+  end
 end

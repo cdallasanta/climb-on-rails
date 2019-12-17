@@ -1,0 +1,244 @@
+.form-group {
+  background-color: rgb(247, 255, 158);
+  margin: 10px;
+  padding: 5px;
+  border-radius: 10px;
+  transition: all .2s linear;
+}
+
+.form-group.incomplete {
+  background-color: rgb(255, 216, 158);
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+
+  label {
+    padding-left: 5px;
+  }
+}
+
+h1 {
+  margin-left: 10px;
+}
+
+h2 {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+h3 {
+  margin: 0px
+}
+
+.updated-by{
+  padding: 10px 5px;
+}
+
+input[type=textarea] {
+  border-radius: 10px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+input[type=date] {
+  border-radius: 10px;
+  padding: 2px;
+}
+
+input[type=number] {
+  width: 30px;
+}
+
+input[type=submit] {
+  -moz-box-shadow: inset -3px -3px 10px #130C0D;
+  -webkit-box-shadow: inset -3px -3px 10px #130C0D;
+  box-shadow: inset -3px -3px 10px #130C0D;
+  background-color: #73452F;
+  color: white;
+  border-radius: 15px;
+  font-style: italic;
+  font-weight: bold;
+  padding: 10px 30px;
+  margin: 5px;
+}
+input[type=submit]:disabled {
+  background-color: #757473;
+  color: #4d4c4b;
+}
+
+hr {
+  border: 3px solid #242700;
+}
+
+.instructions-text {
+  white-space: pre-line;
+  padding-left: 10px;
+}
+
+.comments {
+  background-color: rgb(249, 255, 187);
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 3px solid #242700;
+}
+
+.comment {
+  white-space: pre-line;
+  padding-left: 10px;
+}
+
+.collapsible {
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.collapsible.hidden {
+  transform: scaleY(0);  
+  overflow: hidden;
+  position: absolute;
+}
+
+// animation for checkbox
+// from https://codepen.io/aaroniker/pen/rZPeYQ
+.toggleButton {
+  cursor: pointer;
+  display: block;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  transition: transform .14s ease;
+  &:active {
+    transform: rotateX(30deg);
+  }
+  input {
+    display: none;
+    & + div {
+      border: 3px solid rgba(#242700, .2);
+      border-radius: 50%;
+      position: relative;
+      width: 44px;
+      height: 44px;
+      svg {
+          fill: none;
+          stroke-width: 3.6;
+          stroke: #242700;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          width: 50px;
+          height: 50px;
+          display: block;
+          position: absolute;
+          left: -3px;
+          top: -3px;
+          right: -3px;
+          bottom: -3px;
+          z-index: 1;
+          stroke-dashoffset: 162.6 - 38;
+          stroke-dasharray: 0 162.6 133 (162.6 - 133);
+          transition: all .4s ease 0s;
+      }
+      &:before,
+      &:after {
+          content: '';
+          width: 3px;
+          height: 16px;
+          background: #242700;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          border-radius: 5px;
+      }
+      &:before {
+          opacity: 0;
+          transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+          animation: bounceInBefore .3s linear forwards .3s;
+      }
+      &:after {
+          opacity: 0;
+          transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+          animation: bounceInAfter .3s linear forwards .3s;
+      }
+    }
+    &:checked + div {
+      svg {
+          stroke-dashoffset: 162.6;
+          stroke-dasharray: 0 162.6 28 (162.6 - 28);
+          transition: all .4s ease .2s;
+      }
+      &:before {
+          opacity: 0;
+          transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+          animation: bounceInBeforeDont .3s linear forwards 0s;
+      }
+      &:after {
+          opacity: 0;
+          transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+          animation: bounceInAfterDont .3s linear forwards 0s;
+      }
+    }
+  }
+}
+
+@keyframes bounceInBefore {
+    0% {
+        opacity: 0;
+        transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+    }
+    50%{
+        opacity: 0.9;
+        transform: scale(1.1) translate(-50%, -50%) rotate(45deg);
+    }
+    80%{
+        opacity: 1;
+        transform: scale(.89) translate(-50%, -50%) rotate(45deg);
+    }
+    100%{
+        opacity: 1;
+        transform: scale(1) translate(-50%, -50%) rotate(45deg);
+    }
+}
+
+@keyframes bounceInAfter {
+    0% {
+        opacity: 0;
+        transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+    }
+    50%{
+        opacity: 0.9;
+        transform: scale(1.1) translate(-50%, -50%) rotate(-45deg);
+    }
+    80%{
+        opacity: 1;
+        transform: scale(.89) translate(-50%, -50%) rotate(-45deg);
+    }
+    100%{
+        opacity: 1;
+        transform: scale(1) translate(-50%, -50%) rotate(-45deg);
+    }
+}
+
+@keyframes bounceInBeforeDont {
+    0% {
+        opacity: 1;
+        transform: scale(1) translate(-50%, -50%) rotate(45deg);
+    }
+    100%{
+        opacity: 0;
+        transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+    }
+}
+
+@keyframes bounceInAfterDont {
+  0% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%) rotate(-45deg);
+  }
+  100%{
+      opacity: 0;
+      transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+  }
+}
