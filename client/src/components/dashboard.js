@@ -6,7 +6,6 @@ import "../stylesheets/table.scss";
 import "../stylesheets/dashboard.scss";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-// import {icons} from '../images/index';
 
 class Dashboard extends Component {
   state = {
