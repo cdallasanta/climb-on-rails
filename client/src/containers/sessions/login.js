@@ -14,12 +14,10 @@ class Login extends Component {
     };
   }
 
-  handleChange = event => {
-    const {target} = event
-    const {name} = target;
+  handleChange = ({target}) => {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     this.setState({
-      [name]: value
+      [target.name]: value
     });
   }
 
@@ -43,7 +41,7 @@ class Login extends Component {
           });
         } else {
           this.props.handleLogin(resp.data, remember);
-          this.props.history.push('/');
+          this.props.history.push('/preuse_inspections');
         }
       }) //TODO figure out what I want to so with server errors
       .catch(error => console.log('api error:', error));
