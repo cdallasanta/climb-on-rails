@@ -8,7 +8,7 @@ gem 'rails', '~> 5.2.3'
 # Postgre for database management, since we're using Heroku
 gem 'pg'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 # Use SCSS for stylesheets
 gem 'sassc'
 # Use Uglifier as compressor for JavaScript assets
