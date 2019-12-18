@@ -4,6 +4,8 @@ import '../../stylesheets/periodic_inspections.scss';
 import '../../stylesheets/inspection_forms.scss';
 import axios from 'axios';
 import Section from '../../components/inspections/section';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 class PeriodicForm extends Component {
   state = {
@@ -189,7 +191,7 @@ class PeriodicForm extends Component {
           <form onSubmit={this.handleSubmit.bind(this)} >
             <div className="form-group">
               <label htmlFor="date">Date</label>
-              <input type="date" name="date" className="form-control-sm" value={this.state.date} onChange={event => this.checkDateForInspection(event.target.value)} required />
+              <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.checkDateForInspection} />
             </div>
 
             {this.state.sections_attributes ?

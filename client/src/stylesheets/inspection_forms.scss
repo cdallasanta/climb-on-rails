@@ -93,7 +93,7 @@ hr {
 .collapsible {
   transform: scaleY(1);
   transform-origin: top;
-  transition: transform 0.2s ease;
+  transition: transform .3s ease;
   position: relative;
 }
 

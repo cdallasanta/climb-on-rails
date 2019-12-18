@@ -27,8 +27,8 @@ const Section = ({data: {id, title, complete, comments_attributes}, newComment, 
       <div className={`collapsible ${complete ? "hidden":""}`} >
         <div className="instructions-text">
           <ul>
-            {instructions.split('\n').map(line => {
-              return <li>{line}</li>
+            {instructions.split('\n').map((line, i) => {
+              return <li key={i}>{line}</li>
             })}
           </ul>
         </div>

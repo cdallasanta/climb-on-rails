@@ -5,6 +5,8 @@ import '../../stylesheets/inspection_forms.scss';
 import axios from 'axios';
 import Setup from '../../components/inspections/setup';
 import Takedown from '../../components/inspections/takedown';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 class PreuseForm extends Component {
   state = {
@@ -97,7 +99,7 @@ class PreuseForm extends Component {
         this.props.history.push(`/preuse_inspections/elements/${elemId}/new`);
         this.setState({alert_message: []});
       }
-      this.setState(resp.data);
+      this.setState({...resp.data, date: Date.parse(resp.data.date)});
       this.resetTextboxes();
     })
     
@@ -214,7 +216,7 @@ class PreuseForm extends Component {
           <form onSubmit={this.handleSubmit.bind(this)} >
             <div className="form-group">
               <label htmlFor="date">Date</label>
-              <input type="date" name="date" className="form-control-sm" value={this.state.date} onChange={event => this.checkDateForInspection(event.target.value)} required />
+              <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.checkDateForInspection} />
             </div>
 
             {this.state.setup_attributes ?
