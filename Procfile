@@ -1,1 +1,2 @@
-web: bundle exec puma -t 5:5 -p ${PORT:-3001} -e ${RACK_ENV:-development}
+web: cd client && PORT=3000 npm start
+api: PORT=3001 && bundle exec rails s 
