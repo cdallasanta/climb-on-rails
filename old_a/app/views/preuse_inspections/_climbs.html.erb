@@ -1,9 +1,0 @@
-<%= ff.fields_for :climbs do |climb_form| %>
-  <div>
-    <%= climb_form.label(:climb, climb_form.object.rope.identifier) %>
-    <%= climb_form.number_field :block_1 %>
-    <%= climb_form.number_field :block_2 %>
-    <%= climb_form.number_field :block_3 %>
-    <%= climb_form.number_field :block_4 %>
-  </div>
-<% end %>
