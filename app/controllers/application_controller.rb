@@ -22,6 +22,7 @@ class ApplicationController < ActionController::API
   end
 
   def fallback_index_html
-    render :file => 'public/index.html'
+    render json: Site.find(1)
+    # render :file => 'public/index.html'
   end
 end
