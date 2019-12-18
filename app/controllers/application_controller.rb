@@ -22,7 +22,6 @@ class ApplicationController < ActionController::API
   end
 
   def fallback_index_html
-    binding.pry
     render :file => 'public/index.html'
   end
 end
