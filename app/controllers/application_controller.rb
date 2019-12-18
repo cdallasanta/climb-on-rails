@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
 
   def login!
     session[:user_id] = @user.id
@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-  # TODO check on this alter
+  # TODO check on this later
   def authorized_user?
      @user == current_user
   end
