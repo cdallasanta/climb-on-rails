@@ -20,4 +20,8 @@ class ApplicationController < ActionController::API
   def logout!
     session.clear
   end
+
+  def fallback_index_html
+    render :file => 'public/index.html'
+  end
 end
