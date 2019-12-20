@@ -6,9 +6,11 @@ import ElementCard from '../components/elementCard';
 class ElementList extends Component {
 
   renderElements= () => {
-    return this.props.elements.map(elem => {
-      return <ElementCard data={elem} key={elem.id} location={this.props.location} />;
-    });
+    if (this.props.elements.length > 0){
+      return this.props.elements.map(elem => {
+        return <ElementCard data={elem} key={elem.id} location={this.props.location} />;
+      });
+    }
   }
 
   render() {
