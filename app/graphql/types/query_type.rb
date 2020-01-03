@@ -7,8 +7,8 @@ module Types
       description "Find a particular site"
       argument :id, Integer, required: true
     end
-    def site(id:)
-      Site.find(id)
+    def site(**args)
+      Site.find(args[:id])
     end
 
     field :elements, [ElementType], null: true do
