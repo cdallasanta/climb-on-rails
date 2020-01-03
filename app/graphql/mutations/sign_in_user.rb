@@ -1,10 +1,12 @@
 module Mutations
   class SignInUser < BaseMutation
+    null true
+
     argument :email, String, required: true
     argument :password, String, required: true
     
-    field :token, String, null: true
-    field :user, Types::UserType, null: true
+    field :token, String, null: false
+    field :user, Types::UserType, null: false
 
     def resolve(email:, password:)
       user = User.find_by(email: email)

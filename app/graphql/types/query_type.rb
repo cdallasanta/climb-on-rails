@@ -18,5 +18,13 @@ module Types
     def elements(site_id:)
       Site.find(site_id).elements
     end
+
+    field :element, ElementType, null: true do
+      description "Find a single element"
+      argument :id, Integer, required: true
+    end
+    def element(id:)
+      Element.find(id)
+    end
   end
 end

@@ -11,4 +11,5 @@ class PeriodicInspection < ApplicationRecord
   def self.find_or_init_past_inspection(args)
     self.find_or_initialize_by(args)
   end
+
 end

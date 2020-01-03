@@ -5,6 +5,7 @@ class PreuseInspection < ApplicationRecord
   has_one :takedown, class_name: "PreuseInspection::Takedown"
   accepts_nested_attributes_for :setup
   accepts_nested_attributes_for :takedown
+  after_initialize :create_setup_and_takedown
 
   validates :date, presence: true, uniqueness: {scope: :element}
   validates_presence_of :element
@@ -21,5 +22,10 @@ class PreuseInspection < ApplicationRecord
         self.takedown.climbs.create(rope:rope)
       end
     end
+  end
+
+  def create_setup_and_takedown
+    self.build_setup
+    self.build_takedown
   end
 end

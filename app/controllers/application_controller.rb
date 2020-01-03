@@ -10,13 +10,10 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    p "~~~~~~~~~~"
-    p session
-    p "~~~~~~~~~~"
-    # @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-  # TODO check on this later
+  # TODO check on all of these later
   def authorized_user?
      @user == current_user
   end
