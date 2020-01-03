@@ -10,5 +10,13 @@ module Types
     def site(id:)
       Site.find(id)
     end
+
+    field :elements, [ElementType], null: true do
+      description "Find elements from a particular site"
+      argument :site_id, Integer, required: true
+    end
+    def elements(site_id:)
+      Site.find(site_id).elements
+    end
   end
 end
