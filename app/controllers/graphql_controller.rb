@@ -21,8 +21,14 @@ class GraphqlController < ApplicationController
 
   private
   def current_user
-    binding.pry
-    
+    return unless session[:token]
+
+    crypt = ActiveSupport::MessageEncryptor.new(Rails.application.secret_key_base.byteslice(0..31))
+    token = crypt.decrypt_and_verify session[:token]
+    user_id = token.gsub('user-id:', '').to_i
+    User.find(user_id)
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
   end
 
   # Handle form data, JSON body, or a blank value
