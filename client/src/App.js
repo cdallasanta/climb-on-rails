@@ -6,7 +6,7 @@ import Home from './containers/home';
 import Login from './containers/sessions/login';
 
 class App extends Component {
-  handleLogin = (data, remember = true) => {
+  handleLogin = (data, remember = false) => {
     this.props.login(data);
 
     if(remember){
@@ -21,9 +21,11 @@ class App extends Component {
   }
 
   loginStatus = () => {
+    // if a user is stored in cookies, load it to state and set logged in to true
     if (localStorage.getItem("currentUser") !== null){
       this.props.login(JSON.parse(localStorage.getItem("currentUser")));
     } else {
+    // otherwise, ensure that the store is cleared of user data
       this.handleLogout();
     }
   }

@@ -7,11 +7,7 @@ module Mutations
     type Types::UserType
 
     def resolve(fullname:, email:, password:)
-      User.create!(
-        fullname: fullname,
-        email: email,
-        password: password
-      )
+      binding.pry
     end
   end
 end

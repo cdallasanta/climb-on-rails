@@ -25,7 +25,7 @@ class Dashboard extends Component {
 
   updateState = () => {
     this.setState({lastUpdated: "..."});
-    axios.get(`/api/v1/sites/${this.props.currentUser.site_id}/status/${this.state.date}`)
+    axios.get(`/api/v1/sites/${this.props.currentUser.site_id}/status/${this.state.date}`, {withCredentials: true})
     .then(response => this.setState({
       elements: response.data,
       lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {

@@ -30,7 +30,7 @@ class Login extends Component {
       password: password
     }
 
-    axios.post('/login', {user}, {withCredentials: false})
+    axios.post('/login', {user}, {withCredentials: true})
       .then(resp => {
         if (resp.data.status === 401){
           this.setState({
