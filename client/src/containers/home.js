@@ -14,11 +14,11 @@ class Home extends Component {
     backgroundImage: ""
   }
 
-  componentDidMount(){
-    axios.get(`/api/v1/sites/${this.props.currentUser.site_id}`)
-    .then(response => this.props.setSite(response.data))
-    .catch(error => console.log(error))
-  }
+  // componentDidMount(){
+  //   axios.get(`/api/v1/sites/${this.props.currentUser.site_id}`)
+  //   .then(response => this.props.setSite(response.data))
+  //   .catch(error => console.log(error))
+  // }
 
   componentDidUpdate(prevProps){
     if (prevProps.location !== this.props.location){

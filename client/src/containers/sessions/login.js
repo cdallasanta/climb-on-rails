@@ -38,23 +38,6 @@ class Login extends Component {
     }
   }
 
-  handleSubmit = event => {
-
-    // this.props.signInMutation({
-    //   variables: {email:email, password:password}
-    // });
-/*
-    axios.post('/login', {user}, {withCredentials: true})
-      .then(resp => {
-        if (resp.data.status === 401){
-          
-        } else {
-        }
-      }) //TODO figure out what I want to so with server errors
-      .catch(error => console.log('api error:', error));
-      */
-  }
-
   handleErrors = () => {
     return (
       <div className="alert alert-danger">
@@ -78,7 +61,7 @@ class Login extends Component {
           <h1>Welcome to<br />
           Climb On!</h1>
 
-          <form id="login-form">
+          <form id="login-form" onSubmit={e => e.preventDefault()}>
             <input placeholder="email"
               type="email"
               name="email"
@@ -106,9 +89,9 @@ class Login extends Component {
               onCompleted={data => this.handleSignIn(data)}
             >
               {mutation => (
-                <div placeholder="submit" type="submit" onClick={mutation}>
+                <button placeholder="submit" type="submit" onClick={mutation}>
                   Log In
-                </div>
+                </button>
               )}
             </Mutation>
           </form>

@@ -35,9 +35,7 @@ class App extends Component {
   loginStatus = () => {
     // if a user is stored in cookies, load it to state and set logged in to true
     if (localStorage.getItem(AUTH_TOKEN) !== null){
-      // this.props.login(JSON.parse(localStorage.getItem("currentUser")));
-
-      // TODO probably make a query here
+      this.handleLogin(localStorage.getItem(AUTH_TOKEN));
     } else {
     // otherwise, ensure that the store is cleared of user data
       this.handleLogout();
