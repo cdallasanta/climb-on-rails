@@ -11,8 +11,8 @@ const getElementsQuery = gql`
 `
 
 const signInMutation = gql`
-  mutation {
-    signInUser(email:"", password: ""){
+  mutation($email: String!, $password: String!) {
+    signInUser(email:$email, password: $password){
       token
       user {
         id

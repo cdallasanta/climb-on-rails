@@ -28,12 +28,11 @@ class Login extends Component {
     event.preventDefault();
     
     const {email, password, remember} = this.state;
-    let user = {
-      email: email,
-      password: password
-    }
 
-
+    this.props.signInMutation({
+      variables: {email:email, password:password}
+    });
+/*
     axios.post('/login', {user}, {withCredentials: true})
       .then(resp => {
         if (resp.data.status === 401){
@@ -49,7 +48,7 @@ class Login extends Component {
         }
       }) //TODO figure out what I want to so with server errors
       .catch(error => console.log('api error:', error));
-      
+      */
   }
 
   handleErrors = () => {
