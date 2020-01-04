@@ -4,26 +4,40 @@ import "./stylesheets/global.scss";
 import { withRouter } from 'react-router-dom';
 import Home from './containers/home';
 import Login from './containers/sessions/login';
+import { AUTH_TOKEN } from './constants'
 
 class App extends Component {
-  handleLogin = (data, remember = false) => {
-    this.props.login(data);
+  state = {
+    token: "",
+    loggedIn: false
+  };
+
+  handleLogin = (token, remember = false) => {
+    this.setState({
+      userToken: token,
+      loggedIn: true
+    });
 
     if(remember){
-      localStorage.setItem("currentUser", JSON.stringify(data));
+      localStorage.setItem(AUTH_TOKEN, token);
     }
   }
 
   handleLogout = () => {
-    this.props.logout();
-    localStorage.removeItem("currentUser");
+    this.setState({
+      userToken: "",
+      loggedIn: false
+    });
+    localStorage.removeItem(AUTH_TOKEN);
     this.props.history.push('/');
   }
 
   loginStatus = () => {
     // if a user is stored in cookies, load it to state and set logged in to true
-    if (localStorage.getItem("currentUser") !== null){
-      this.props.login(JSON.parse(localStorage.getItem("currentUser")));
+    if (localStorage.getItem(AUTH_TOKEN) !== null){
+      // this.props.login(JSON.parse(localStorage.getItem("currentUser")));
+
+      // TODO probably make a query here
     } else {
     // otherwise, ensure that the store is cleared of user data
       this.handleLogout();
@@ -35,7 +49,7 @@ class App extends Component {
   }
 
   render() {
-    if (this.props.loggedIn) {
+    if (this.state.loggedIn) {
       return (
         <Home handleLogout={this.handleLogout} />
       );
@@ -47,18 +61,4 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    loggedIn: state.loggedIn,
-    currentUser: state.currentUser
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    login: (user) => dispatch({type:"LOGIN", payload:user}),
-    logout: () => dispatch({type:"LOGOUT"})
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(App);

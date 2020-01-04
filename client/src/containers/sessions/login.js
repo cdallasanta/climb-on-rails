@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import '../../stylesheets/sessions.scss';
 import { withRouter } from "react-router";
-import axios from 'axios';
-import {graphql} from 'react-apollo';
+import {graphql, Mutation} from 'react-apollo';
 import * as compose from 'lodash.flowright';
 import {signInMutation} from '../../queries/queries';
+import { AUTH_TOKEN } from '../../constants'
 
 class Login extends Component {
   constructor(props){
@@ -24,27 +24,31 @@ class Login extends Component {
     });
   }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    
-    const {email, password, remember} = this.state;
+  handleSignIn = resp => {
+    if(resp.signInUser === null){
+      this.setState({
+        email: "",
+        password: "",
+        remember: false,
+        errors: ["No User found with that email and password"]
+      });
+    } else {
+      this.props.handleLogin(resp.signInUser.token, this.state.remember);
+      this.props.history.push('/preuse_inspections');
+    }
+  }
 
-    this.props.signInMutation({
-      variables: {email:email, password:password}
-    });
+  handleSubmit = event => {
+
+    // this.props.signInMutation({
+    //   variables: {email:email, password:password}
+    // });
 /*
     axios.post('/login', {user}, {withCredentials: true})
       .then(resp => {
         if (resp.data.status === 401){
-          this.setState({
-            email: "",
-            password: "",
-            remember: false,
-            errors: resp.data.errors
-          });
+          
         } else {
-          this.props.handleLogin(resp.data, remember);
-          this.props.history.push('/preuse_inspections');
         }
       }) //TODO figure out what I want to so with server errors
       .catch(error => console.log('api error:', error));
@@ -74,7 +78,7 @@ class Login extends Component {
           <h1>Welcome to<br />
           Climb On!</h1>
 
-          <form onSubmit={this.handleSubmit} id="login-form">
+          <form id="login-form">
             <input placeholder="email"
               type="email"
               name="email"
@@ -96,9 +100,17 @@ class Login extends Component {
               <label htmlFor="remember">Remember Me</label>
             </div>
 
-            <button placeholder="submit" type="submit">
-              Log In
-            </button>
+            <Mutation
+              mutation={signInMutation}
+              variables={{ email, password }}
+              onCompleted={data => this.handleSignIn(data)}
+            >
+              {mutation => (
+                <div placeholder="submit" type="submit" onClick={mutation}>
+                  Log In
+                </div>
+              )}
+            </Mutation>
           </form>
         </div>
       </div>
