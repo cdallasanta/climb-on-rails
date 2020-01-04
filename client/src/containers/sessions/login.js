@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import '../../stylesheets/sessions.scss';
 import { withRouter } from "react-router";
 import axios from 'axios';
+import {graphql} from 'react-apollo';
+import * as compose from 'lodash.flowright';
+import {signInMutation} from '../../queries/queries';
 
 class Login extends Component {
   constructor(props){
@@ -30,6 +33,7 @@ class Login extends Component {
       password: password
     }
 
+
     axios.post('/login', {user}, {withCredentials: true})
       .then(resp => {
         if (resp.data.status === 401){
@@ -45,6 +49,7 @@ class Login extends Component {
         }
       }) //TODO figure out what I want to so with server errors
       .catch(error => console.log('api error:', error));
+      
   }
 
   handleErrors = () => {
@@ -102,5 +107,8 @@ class Login extends Component {
   }
 };
 
-export default withRouter(Login);
+export default compose(
+  graphql(signInMutation, {name:"signInMutation"}),
+  withRouter
+)(Login);
 

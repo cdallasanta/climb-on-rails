@@ -2,12 +2,16 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import "../stylesheets/elements.scss";
 import ElementCard from '../components/elementCard';
+import {graphql} from 'react-apollo';
+import {getElementsQuery} from '../queries/queries';
+import * as compose from 'lodash.flowright';
 
 class ElementList extends Component {
 
   renderElements= () => {
-    if (this.props.elements.length > 0){
-      return this.props.elements.map(elem => {
+    const data = this.props.getElementsQuery
+    if (!data.loading){
+      return data.elements.map(elem => {
         return <ElementCard data={elem} key={elem.id} location={this.props.location} />;
       });
     }
@@ -22,11 +26,6 @@ class ElementList extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.currentUser,
-    elements: state.site.elements
-  }
-}
-
-export default connect(mapStateToProps)(ElementList);
+export default compose(
+  graphql(getElementsQuery, {name:"getElementsQuery"})
+)(ElementList);
