@@ -23,9 +23,14 @@ const signInMutation = gql`
 `
 
 const siteStatusQuery = gql`
-query {
+query($date: String!) {
   site {
-      status
+      status(date: $date) {
+          id
+          name
+          setup
+          takedown
+      }
   }
 }
 `

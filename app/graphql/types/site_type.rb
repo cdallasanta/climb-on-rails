@@ -4,18 +4,19 @@ module Types
     field :name, String, null: false
     field :elements, [ElementType], null: true
     field :contact, UserType, null: true
-    field :status, String, null: true do
+    field :status, [StatusType], null: true do
       argument :date, String, required: false
     end
 
     # TODO clean this up
     def status(**args)
       args[:date] ? date = args[:date] : date = Date.today
-      agg = {}
+      elementsStatus = []
       object.elements.each do |elem|
+        status = {name: elem.name, id: elem.id}
         insp = elem.preuse_inspections.find_by(date: date)
         if insp
-          status = {id: elem.id, setup: insp.setup.status}
+          status[:setup] = insp.setup.status
           if insp.takedown
             status[:takedown] = insp.takedown.status
           else
@@ -23,16 +24,16 @@ module Types
           end
         else
           status = {
-            id: elem.id,
+            **status,
             setup: "not started",
             takedown: "not started"
           }
         end
 
-        agg[elem.name] = status
+        elementsStatus << status
       end
 
-      agg
+      elementsStatus
     end
   end
 end

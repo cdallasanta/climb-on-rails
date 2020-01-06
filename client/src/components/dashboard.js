@@ -1,23 +1,24 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
-import {connect} from 'react-redux';
-import axios from 'axios';
 import "../stylesheets/table.scss";
 import "../stylesheets/dashboard.scss";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { graphql } from 'react-apollo';
 import { siteStatusQuery } from '../queries/queries';
+import {flowRight as compose} from 'lodash';
 
 class Dashboard extends Component {
   state = {
     elements: [],
-    lastUpdated: Date.now(),
+    lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {
+      hour: "numeric",
+      minute: "numeric"
+    }),
     date: new Date()
   }
 
   componentDidMount() {
-    this.updateState();
     setInterval(this.updateState, 60000);
   }
 
@@ -26,16 +27,11 @@ class Dashboard extends Component {
   }
 
   updateState = () => {
-    // this.setState({lastUpdated: "..."});
-    // axios.get(`/api/v1/sites/${this.props.currentUser.site_id}/status/${this.state.date}`, {withCredentials: true})
-    // .then(response => this.setState({
-    //   elements: response.data,
-    //   lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {
-    //     hour: "numeric",
-    //     minute: "numeric"
-    //   })
-    // }))
-    // .catch(error => console.log(error))
+    debugger;
+    this.setState({lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {
+      hour: "numeric",
+      minute: "numeric"
+    })})
   }
 
   setDate = date => {
@@ -44,19 +40,13 @@ class Dashboard extends Component {
     });
   }
 
-  // setImgURL = status => {
-  //   const iconUrls = icons
-  //   return iconUrls[status]
-  // }
-
   renderInspectionTable = () => {
-    if (!this.props.loading){
-      debugger;
-      const data = this.props.data
-      return Object.keys(this.state.elements).map((element, i) => {
-        const elem = this.state.elements[element]
+    const data = this.props.siteStatusQuery;
+    if (!data.loading){
+      const elements = data.site.status
+      return elements.map((elem, i) => {
         return <div className="table-row" key={i}>
-          <div className="td">{element}</div>
+          <div className="td">{elem.name}</div>
           <div className="td"><img src={require(`../images/${elem.setup}.png`)} className="statusIcon" alt={elem.setup} /></div>
           <div className="td"><img src={require(`../images/${elem.takedown}.png`)} className="statusIcon" alt={elem.takedown} /></div>
           <div className="td"><NavLink to={`/admin/elements/${elem.id}`}>View Element</NavLink></div>
@@ -86,8 +76,8 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {currentUser: state.currentUser}
-}
-
-export default graphql(siteStatusQuery)(Dashboard);
+export default compose(
+  graphql(siteStatusQuery, {
+    options: (props) => ({ variables: { date: new Date()} }),
+    name: "siteStatusQuery" 
+  }))(Dashboard);
