@@ -5,18 +5,17 @@ module Types
 
     field :site, SiteType, null: false do
       description "Find a particular site"
-      argument :id, Integer, required: true
     end
-    def site(**args)
-      Site.find(args[:id])
+    def site
+      context[:current_user].site
     end
 
     field :elements, [ElementType], null: true do
       description "Find elements from a particular site"
-      argument :site_id, Integer, required: true
     end
-    def elements(site_id:)
-      Site.find(site_id).elements
+    def elements
+      binding.pry
+      context[:current_user].site.elements
     end
 
     field :element, ElementType, null: true do

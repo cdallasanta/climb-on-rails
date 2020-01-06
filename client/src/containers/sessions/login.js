@@ -25,6 +25,7 @@ class Login extends Component {
   }
 
   handleSignIn = resp => {
+    debugger;
     if(resp.signInUser === null){
       this.setState({
         email: "",

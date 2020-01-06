@@ -3,7 +3,7 @@ import {gql} from 'apollo-boost';
 
 const getElementsQuery = gql`
   query {
-    elements(siteId:1){
+    elements{
       id
       name
     }
