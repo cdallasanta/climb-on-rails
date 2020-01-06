@@ -21,4 +21,13 @@ const signInMutation = gql`
     }
   }
 `
-export {getElementsQuery, signInMutation}
+
+const siteStatusQuery = gql`
+query {
+  site {
+      status
+  }
+}
+`
+
+export {getElementsQuery, signInMutation, siteStatusQuery}

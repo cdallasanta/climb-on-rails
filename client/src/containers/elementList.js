@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import "../stylesheets/elements.scss";
 import ElementCard from '../components/elementCard';
 import {graphql} from 'react-apollo';

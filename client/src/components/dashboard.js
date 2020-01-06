@@ -6,6 +6,8 @@ import "../stylesheets/table.scss";
 import "../stylesheets/dashboard.scss";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { graphql } from 'react-apollo';
+import { siteStatusQuery } from '../queries/queries';
 
 class Dashboard extends Component {
   state = {
@@ -24,16 +26,16 @@ class Dashboard extends Component {
   }
 
   updateState = () => {
-    this.setState({lastUpdated: "..."});
-    axios.get(`/api/v1/sites/${this.props.currentUser.site_id}/status/${this.state.date}`, {withCredentials: true})
-    .then(response => this.setState({
-      elements: response.data,
-      lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {
-        hour: "numeric",
-        minute: "numeric"
-      })
-    }))
-    .catch(error => console.log(error))
+    // this.setState({lastUpdated: "..."});
+    // axios.get(`/api/v1/sites/${this.props.currentUser.site_id}/status/${this.state.date}`, {withCredentials: true})
+    // .then(response => this.setState({
+    //   elements: response.data,
+    //   lastUpdated: new Date(Date.now()).toLocaleTimeString("es-US", {
+    //     hour: "numeric",
+    //     minute: "numeric"
+    //   })
+    // }))
+    // .catch(error => console.log(error))
   }
 
   setDate = date => {
@@ -48,7 +50,9 @@ class Dashboard extends Component {
   // }
 
   renderInspectionTable = () => {
-    if (Object.keys(this.state.elements).length > 0){
+    if (!this.props.loading){
+      debugger;
+      const data = this.props.data
       return Object.keys(this.state.elements).map((element, i) => {
         const elem = this.state.elements[element]
         return <div className="table-row" key={i}>
@@ -86,4 +90,4 @@ const mapStateToProps = state => {
   return {currentUser: state.currentUser}
 }
 
-export default connect(mapStateToProps)(Dashboard);
+export default graphql(siteStatusQuery)(Dashboard);

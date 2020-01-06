@@ -7,6 +7,7 @@ module Types
       description "Find a particular site"
     end
     def site
+      check_authentication!
       context[:current_user].site
     end
 
@@ -14,7 +15,7 @@ module Types
       description "Find elements from a particular site"
     end
     def elements
-      binding.pry
+      check_authentication!
       context[:current_user].site.elements
     end
 
@@ -23,6 +24,7 @@ module Types
       argument :id, Integer, required: true
     end
     def element(id:)
+      check_authentication!
       Element.find(id)
     end
   end
