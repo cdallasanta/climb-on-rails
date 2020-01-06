@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../../stylesheets/sessions.scss';
 import { withRouter } from "react-router";
-import {graphql, Mutation} from 'react-apollo';
+import { graphql } from 'react-apollo';
 import * as compose from 'lodash.flowright';
-import {signInMutation} from '../../queries/queries';
-import { AUTH_TOKEN } from '../../constants'
+import { signInMutation } from '../../queries/queries';
 
 class Login extends Component {
   constructor(props){
@@ -25,7 +24,6 @@ class Login extends Component {
   }
 
   handleSignIn = resp => {
-    debugger;
     if(resp.signInUser === null){
       this.setState({
         email: "",
@@ -51,6 +49,16 @@ class Login extends Component {
     )
   }
 
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.signInMutation({
+      variables: {
+        email: this.state.email,
+        password: this.state.password
+      }
+    }).then(resp => this.handleSignIn(resp.data))
+  }
+
   render() {
     const {email, password, remember} = this.state;
 
@@ -62,7 +70,7 @@ class Login extends Component {
           <h1>Welcome to<br />
           Climb On!</h1>
 
-          <form id="login-form" onSubmit={e => e.preventDefault()}>
+          <form id="login-form" onSubmit={this.handleSubmit}>
             <input placeholder="email"
               type="email"
               name="email"
@@ -84,17 +92,9 @@ class Login extends Component {
               <label htmlFor="remember">Remember Me</label>
             </div>
 
-            <Mutation
-              mutation={signInMutation}
-              variables={{ email, password }}
-              onCompleted={data => this.handleSignIn(data)}
-            >
-              {mutation => (
-                <button placeholder="submit" type="submit" onClick={mutation}>
-                  Log In
-                </button>
-              )}
-            </Mutation>
+            <button placeholder="submit" type="submit">
+              Log In
+            </button>
           </form>
         </div>
       </div>
