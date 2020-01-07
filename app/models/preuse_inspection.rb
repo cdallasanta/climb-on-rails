@@ -14,6 +14,11 @@ class PreuseInspection < ApplicationRecord
     self.find_or_initialize_by(args)
   end
 
+  def create_setup_and_takedown
+    self.setup ||= PreuseInspection::Setup.create
+    self.takedown ||= PreuseInspection::Takedown.create
+  end
+  
   def create_takedown(current_user)
     self.takedown ||= PreuseInspection::Takedown.create
 
@@ -22,10 +27,5 @@ class PreuseInspection < ApplicationRecord
         self.takedown.climbs.create(rope:rope)
       end
     end
-  end
-
-  def create_setup_and_takedown
-    self.build_setup
-    self.build_takedown
   end
 end

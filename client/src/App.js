@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import "./stylesheets/global.scss";
 import { withRouter } from 'react-router-dom';
 import Home from './containers/home';

@@ -6,19 +6,12 @@ import AdminContainer from './admin';
 import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
 import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
 import Header from '../components/header';
-import axios from 'axios';
 import * as images from '../images/index';
 
 class Home extends Component {
   state = {
     backgroundImage: ""
   }
-
-  // componentDidMount(){
-  //   axios.get(`/api/v1/sites/${this.props.currentUser.site_id}`)
-  //   .then(response => this.props.setSite(response.data))
-  //   .catch(error => console.log(error))
-  // }
 
   componentDidUpdate(prevProps){
     if (prevProps.location !== this.props.location){

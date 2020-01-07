@@ -37,3 +37,6 @@ chris = User.create(
 
 orkila.contact = demo
 orkila.save
+
+# preuse inspections
+binding.pry
