@@ -5,18 +5,7 @@ import DatePicker from 'react-datepicker';
 import { NavLink } from 'react-router-dom';
 
 const DashboardTable = ({date, setDate, lastUpdated}) => {
-  const renderInspectionTable = () => {
-    const formattedDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-    const {loading, error, data } = useQuery(siteStatusQuery, {
-      variables: {date: formattedDate},
-      pollInterval: 60000,
-      fetchPolicy: "no-cache"
-    })
-
-    if (loading) return
-    if (error) return <div>Error</div>
-    const elements = data.site.status;
-
+  const renderInspectionTable = (elements) => {
     return elements.map((elem, i) => {
       return <div className="table-row" key={i}>
           <div className="td">{elem.name}</div>
@@ -27,6 +16,13 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
     })
   }
 
+  const formattedDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+  const { data } = useQuery(siteStatusQuery, {
+    variables: {date: formattedDate},
+    pollInterval: 60000,
+    fetchPolicy: "no-cache"
+  })
+  
   return <div className="dashboard">
     <DatePicker selected={date} onChange={(date) => setDate(date)} />
     <div className="table">
@@ -37,7 +33,7 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
         <div className="th"></div>
       </div>
       <div className="table-body">
-        {renderInspectionTable()}
+        {typeof(data) === "undefined" ? null : renderInspectionTable(data.site.status)}
       </div>
     </div>
     <div className="last-updated">Last updated: {lastUpdated}</div>
