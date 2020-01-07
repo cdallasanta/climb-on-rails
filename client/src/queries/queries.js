@@ -35,4 +35,49 @@ query($date: String!) {
 }
 `
 
-export {getElementsQuery, signInMutation, siteStatusQuery}
+const getPreuseInspectionQuery = gql`
+query($elemId: Int!, $date: String) {
+  element(id:$elemId) {
+      preuseInspection(date:$date) {
+          setup{
+              sections{
+                  complete
+              }
+          }
+          takedown{
+              sections {
+                  complete
+              }
+          }
+      }
+  }
+}
+`
+
+const getPeriodicInspectionQuery = gql`
+query($elemId: Int!, $date: String!) {
+  element(id:$elemId) {
+    id
+    periodicElementInstructions
+    periodicEquipmentInstructions
+    periodicEnvironmentInstructions
+    periodicInspection(date:$date){
+      id
+      users
+      sections{
+        id
+        complete
+        comments {
+          id
+          content
+          user {
+            fullname
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+export {getElementsQuery, signInMutation, siteStatusQuery, getPreuseInspectionQuery, getPeriodicInspectionQuery}

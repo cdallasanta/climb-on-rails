@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import '../../stylesheets/preuse_inspections.scss';
 import '../../stylesheets/inspection_forms.scss';
 import axios from 'axios';
@@ -244,10 +243,4 @@ class PreuseForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.currentUser
-  }
-}
-
-export default connect(mapStateToProps)(PreuseForm);
+export default PreuseForm;

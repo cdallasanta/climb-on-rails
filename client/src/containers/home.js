@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import "../stylesheets/global.scss";
 import { Switch, Route, withRouter} from 'react-router-dom';
 import AdminContainer from './admin';
@@ -61,16 +60,4 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.currentUser
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setSite: (data) => dispatch({type: "SET_SITE", payload: data})
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default withRouter(Home);

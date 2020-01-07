@@ -1,24 +1,26 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import '../../stylesheets/periodic_inspections.scss';
 import '../../stylesheets/inspection_forms.scss';
 import axios from 'axios';
 import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { graphql, Query } from 'react-apollo';
+import {getPeriodicInspectionQuery} from '../../queries/queries';
 
 class PeriodicForm extends Component {
   state = {
     date: new Date(),
     element: {},
-    id: null,
+    id: parseInt(this.props.match.params.element_id),
     users: [],
     alert_message: [],
     newComments: {
       Equipment: {content: ""},
       Element: {content: ""},
       Environment: {content: ""}
-    }
+    },
+
   }
 
   resetTextboxes = () => {
@@ -54,26 +56,6 @@ class PeriodicForm extends Component {
     document.getElementById('submit-button').value = "Submit";
   }
 
-  checkDateForInspection = date => {
-    const elemId = this.props.match.params.element_id;
-    axios.get(`/api/v1/elements/${elemId}/periodic_inspections/date/${date}`)
-    .then(resp =>{
-      if (resp.data.id !== null){
-        this.props.history.push(`/periodic_inspections/elements/${elemId}/edit`);
-        this.setState({alert_message: [{type:"info", message:"Previous inspection loaded"}]});
-      } else {
-        this.props.history.push(`/periodic_inspections/elements/${elemId}/new`);
-        this.setState({alert_message: []});
-      }
-      this.setState(resp.data);
-      this.resetTextboxes();
-    })
-  }
-
-  componentDidMount(){
-    this.checkDateForInspection(this.state.date);
-  }
-
   renderUpdatedBy = () => {
     if (this.state.users.length > 0) {
       return (
@@ -87,11 +69,6 @@ class PeriodicForm extends Component {
         </div>
       )
     }
-  }
-
-  // TODO figure out how I want to handle server errors
-  handleErrors = errors => {
-    console.log(errors);
   }
 
   gatherDataFromState = () => {
@@ -182,35 +159,59 @@ class PeriodicForm extends Component {
     }
   }
 
+  queryCompleted = resp => {
+    if (resp.periodicInspetion.id !== null){
+      this.props.history.push(`/periodic_inspections/elements/${resp.id}/edit`);
+      this.setState({alert_message: [{type:"info", message:"Previous inspection loaded"}]});
+    } else {
+      this.props.history.push(`/periodic_inspections/elements/${resp.id}/new`);
+      this.setState({alert_message: []});
+    }
+    this.resetTextboxes();
+    this.updateStateFromQuery(resp);
+  }
+
+  updateStateFromQuery = data => {
+// this.state.users
+
+// sections_attributes: this.state.sections_attributes,
+  }
+
   render() {
     return (
-      <>
-        {this.renderAlert()}
+      <Query
+        query={getPeriodicInspectionQuery}
+        variables={{
+          elemId: this.state.id,
+          date: this.state.date
+        }}
+        onCompleted={(data)=> this.queryCompleted(data.element)}>
 
-        <div id="periodic-inspection-form">
-          <form onSubmit={this.handleSubmit.bind(this)} >
-            <div className="form-group">
-              <label htmlFor="date">Date</label>
-              <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.checkDateForInspection} />
+        {({loading}) => {
+          if (loading) return null;
+          return <>
+            {this.renderAlert()}
+
+            <div id="periodic-inspection-form">
+            <form onSubmit={this.handleSubmit.bind(this)} >
+              <div className="form-group">
+                <label htmlFor="date">Date</label>
+                <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.checkDateForInspection} />
+              </div>
+
+              {this.state.sections_attributes ?
+                this.renderSections() : null }
+
+              <input type="submit" id="submit-button" />
+
+              {this.renderUpdatedBy()}
+            </form>
             </div>
-
-            {this.state.sections_attributes ?
-              this.renderSections() : null }
-
-            <input type="submit" id="submit-button" />
-
-            {this.renderUpdatedBy()}
-          </form>
-        </div>
-      </>
+          </>
+        }}
+      </Query>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.currentUser
-  }
-}
-
-export default connect(mapStateToProps)(PeriodicForm);
+export default PeriodicForm;
