@@ -13,14 +13,6 @@ class Dashboard extends Component {
     date: new Date()
   }
 
-  componentDidMount() {
-    setInterval(this.updateState, 60000);
-  }
-
-  componentWillUnmount(){
-    clearInterval();
-  }
-
   setDate = (date) => {
     this.setState({
       date: date,

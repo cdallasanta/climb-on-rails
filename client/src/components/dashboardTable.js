@@ -2,10 +2,20 @@ import React from 'react';
 import { siteStatusQuery } from '../queries/queries';
 import { useQuery } from '@apollo/react-hooks';
 import DatePicker from 'react-datepicker';
-import {NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const DashboardTable = ({date, setDate, lastUpdated}) => {
-  const renderInspectionTable = (elements) => {
+  const renderInspectionTable = () => {
+    const formattedDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    const {loading, error, data } = useQuery(siteStatusQuery, {
+      variables: {date: formattedDate},
+      pollInterval: 60000
+    })
+
+    if (loading) return
+    if (error) return <div>Error</div>
+    const elements = data.site.status;
+
     return elements.map((elem, i) => {
       return <div className="table-row" key={i}>
           <div className="td">{elem.name}</div>
@@ -15,16 +25,6 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
         </div>
     })
   }
-  
-  const formattedDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-  const {loading, error, data } = useQuery(siteStatusQuery, {
-    variables: {date: formattedDate},
-    pollInterval: 60000,
-    fetchPolicy: "network-only"
-  })
-
-  if (loading) return <div>Loading</div>
-  if (error) return <div>error</div>
 
   return <div className="dashboard">
     <DatePicker selected={date} onChange={(date) => setDate(date)} />
@@ -36,7 +36,7 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
         <div className="th"></div>
       </div>
       <div className="table-body">
-        {renderInspectionTable(data.site.status)}
+        {renderInspectionTable()}
       </div>
     </div>
     Last updated: {lastUpdated}
