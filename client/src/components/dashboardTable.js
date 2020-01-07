@@ -9,7 +9,8 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
     const formattedDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
     const {loading, error, data } = useQuery(siteStatusQuery, {
       variables: {date: formattedDate},
-      pollInterval: 60000
+      pollInterval: 60000,
+      fetchPolicy: "no-cache"
     })
 
     if (loading) return
@@ -39,7 +40,7 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
         {renderInspectionTable()}
       </div>
     </div>
-    Last updated: {lastUpdated}
+    <div className="last-updated">Last updated: {lastUpdated}</div>
   </div>
 }
 

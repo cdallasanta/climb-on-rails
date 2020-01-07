@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import "../stylesheets/table.scss";
 import "../stylesheets/dashboard.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import DashboardTable from './dashboardTable';
