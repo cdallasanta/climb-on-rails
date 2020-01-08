@@ -33,15 +33,15 @@ query($elemId: Int!, $date: String!) {
           fullname
         }
         ropesAttributes: ropes {
-            id
-            identifier
-            climbsAttributes: climbs {
-                id
-                block1
-                block2
-                block3
-                block4
-            }
+          id
+          identifier
+          climbsAttributes: climbs {
+              id
+              block1
+              block2
+              block3
+              block4
+          }
         }
         sectionsAttributes: sections{
           title
