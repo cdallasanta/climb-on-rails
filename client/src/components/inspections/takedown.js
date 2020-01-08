@@ -26,7 +26,6 @@ class Takedown extends Component {
   }
 
   renderClimbs = () => {
-    debugger;
     return <div className="climb-blocks form-group">
       <table>
         <thead><tr>

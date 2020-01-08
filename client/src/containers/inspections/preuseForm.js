@@ -193,7 +193,6 @@ class PreuseForm extends Component {
   } //TODO put changed state in resetTextboxes
 
   updateStateFromQuery = data => {
-    debugger;
     this.setState({
       setupAttributes: data.preuseInspection.setupAttributes,
       takedownAttributes: data.preuseInspection.takedownAttributes,
@@ -244,8 +243,7 @@ class PreuseForm extends Component {
                   newComments={this.state.newComments.setup}
                 /> : null}
 
-              {/* {this.state.setupAttributes && this.state.setupAttributes.isComplete ? */}
-              {this.state.takedownAttributes ?
+              {this.state.setupAttributes && this.state.setupAttributes.isComplete ?
                 <><hr /><Takedown data={this.state.takedownAttributes}
                   renderUpdatedBy={this.renderUpdatedBy}
                   handleChange={this.handleChange}
