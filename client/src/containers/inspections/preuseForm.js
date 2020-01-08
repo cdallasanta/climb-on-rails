@@ -243,7 +243,7 @@ class PreuseForm extends Component {
                   newComments={this.state.newComments.setup}
                 /> : null}
 
-              {this.state.takedownAttributes ?
+              {this.state.setupAttributes && this.state.setupAttributes.isComplete ?
                 <><hr /><Takedown data={this.state.takedownAttributes}
                   renderUpdatedBy={this.renderUpdatedBy}
                   handleChange={this.handleChange}
