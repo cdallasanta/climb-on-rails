@@ -6,13 +6,13 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(**args)
+      params = args.to_h
       binding.pry
-      # @params = eval(args[:payload])
       
-      # if args[:id]
-      #   @inspection = PeriodicInspection.find(args[:id])
+      # if params[:id]
+      #   @inspection = PeriodicInspection.find(params[:id])
       # else
-      #   @inspection = PeriodicInspection.new(element_id: @params[:element_id])
+      #   @inspection = PeriodicInspection.new(element_id: params[:element_id])
       # end
       # return save_and_return
     end
