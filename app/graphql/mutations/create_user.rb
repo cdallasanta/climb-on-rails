@@ -7,7 +7,7 @@ module Mutations
     type Types::UserType
 
     def resolve(fullname:, email:, password:)
-      binding.pry
+      # TODO this
     end
   end
 end

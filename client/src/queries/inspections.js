@@ -89,6 +89,12 @@ query($elemId: Int!, $date: String!) {
 `
 
 const savePeriodicMutation = gql`
+mutation($payload: String!) {
+  savePeriodic(payload: $payload){
+    status
+    errors
+  }
+}
 `
 
 export { getPreuseInspectionQuery, getPeriodicInspectionQuery, savePeriodicMutation }
