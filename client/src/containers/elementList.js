@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import "../stylesheets/elements.scss";
 import ElementCard from '../components/elementCard';
-import {graphql, Query} from 'react-apollo';
-import {getElementsQuery} from '../queries/queries';
-import * as compose from 'lodash.flowright';
+import { Query } from 'react-apollo';
+import { getElementsQuery } from '../queries/queries';
 
 class ElementList extends Component {
   renderElements= (data) => {

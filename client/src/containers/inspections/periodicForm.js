@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import '../../stylesheets/periodic_inspections.scss';
 import '../../stylesheets/inspection_forms.scss';
-import axios from 'axios';
 import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { graphql, Query } from 'react-apollo';
-import {getPeriodicInspectionQuery} from '../../queries/inspections';
+import { Query } from 'react-apollo';
+import { getPeriodicInspectionQuery } from '../../queries/inspections';
 
 class PeriodicForm extends Component {
   state = {
@@ -48,7 +47,7 @@ class PeriodicForm extends Component {
       const {name, checked} = event.target;
   
       this.setState(state => {
-        return state.sections_attributes.find(s => s.title === name).complete = checked;
+        return state.sectionsAttributes.find(s => s.title === name).complete = checked;
       });
     }
     this.setState({changed: true, alertMessage: {}});
@@ -98,32 +97,32 @@ class PeriodicForm extends Component {
     const elemId = this.state.element.id;
     const data = this.gatherDataFromState();
 
-    if (this.state.id){
-      const url = `/api/v1/elements/${elemId}/periodic_inspections/${this.state.id}`;
-      axios.patch(url,{periodic_inspection: data, user_id: this.props.currentUser.id})
-        .then(resp => {
-          if(resp.status === 200){
-            this.setState(resp.data);
-            this.resetTextboxes();
-            this.setState({alertMessage: {type:"success", message:"Inspection successfully updated"}});
-          } else {
-            this.handleErrors(resp.errors);
-          }
-        })
-    } else {
-      const url = `/api/v1/elements/${elemId}/periodic_inspections/`;
-      axios.post(url,{periodic_inspection: data, user_id: this.props.currentUser.id})
-        .then(resp => {
-          if(resp.status === 200){
-            this.setState(resp.data);
-            this.resetTextboxes();
-            this.setState({alertMessage: {type:"success", message:"Inspection successfully logged"}});
-            this.props.history.push(`/periodic_inspections/elements/${elemId}/edit`);
-          } else {
-            this.handleErrors(resp.errors);
-          }
-        })
-    }
+    // if (this.state.id){
+    //   const url = `/api/v1/elements/${elemId}/periodic_inspections/${this.state.id}`;
+    //   axios.patch(url,{periodic_inspection: data, user_id: this.props.currentUser.id})
+    //     .then(resp => {
+    //       if(resp.status === 200){
+    //         this.setState(resp.data);
+    //         this.resetTextboxes();
+    //         this.setState({alertMessage: {type:"success", message:"Inspection successfully updated"}});
+    //       } else {
+    //         this.handleErrors(resp.errors);
+    //       }
+    //     })
+    // } else {
+    //   const url = `/api/v1/elements/${elemId}/periodic_inspections/`;
+    //   axios.post(url,{periodic_inspection: data, user_id: this.props.currentUser.id})
+    //     .then(resp => {
+    //       if(resp.status === 200){
+    //         this.setState(resp.data);
+    //         this.resetTextboxes();
+    //         this.setState({alertMessage: {type:"success", message:"Inspection successfully logged"}});
+    //         this.props.history.push(`/periodic_inspections/elements/${elemId}/edit`);
+    //       } else {
+    //         this.handleErrors(resp.errors);
+    //       }
+    //     })
+    // }
   }
 
   renderAlert = () => {
@@ -140,22 +139,22 @@ class PeriodicForm extends Component {
   }
 
   renderSections = () => {
-    if (this.state.sections_attributes.length > 0) {
+    if (this.state.sectionsAttributes.length > 0) {
       return <>
         <Section
           handleChange={this.handleChange}
           instructions={this.state.element.elementInstructions}
-          data={this.state.sections_attributes.find(s => s.title === "Element")}
+          data={this.state.sectionsAttributes.find(s => s.title === "Element")}
           newComment={this.state.newComments.Element.content} />
         <Section
           handleChange={this.handleChange}
           instructions={this.state.element.equipmentInstructions}
-          data={this.state.sections_attributes.find(s => s.title === "Equipment")}
+          data={this.state.sectionsAttributes.find(s => s.title === "Equipment")}
           newComment={this.state.newComments.Equipment.content} />
         <Section
           handleChange={this.handleChange}
           instructions={this.state.element.environmentInstructions}
-          data={this.state.sections_attributes.find(s => s.title === "Environment")}
+          data={this.state.sectionsAttributes.find(s => s.title === "Environment")}
           newComment={this.state.newComments.Environment.content} />
       </>
     }
@@ -176,7 +175,7 @@ class PeriodicForm extends Component {
   updateStateFromQuery = data => {
     this.setState({
       users: data.periodicInspection.users,
-      sections_attributes: data.periodicInspection.sections,
+      sectionsattributes: data.periodicInspection.sectionsAttributes,
       element: {
         equipmentInstructions: data.periodicEquipmentInstructions,
         elementInstructions: data.periodicElementInstructions,
@@ -209,7 +208,7 @@ class PeriodicForm extends Component {
                 <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
               </div>
 
-              {this.state.sections_attributes ?
+              {this.state.sectionsAttributes ?
                 this.renderSections() : null }
 
               <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>

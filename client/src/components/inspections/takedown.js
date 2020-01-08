@@ -5,22 +5,22 @@ class Takedown extends Component {
   renderSections = () => {
     return <>
       <Section {...this.props}
-        instructions={this.props.element.element_instructions}
-        data={this.props.data.sections_attributes.find(s => s.title === "Element")}
+        instructions={this.props.instructions.elementInstructions}
+        data={this.props.data.sectionsAttributes.find(s => s.title === "Element")}
         handleChange={this.props.handleChange}
-        newComment={this.props.newComments.Element.content}
+        newComment={this.props.newComments.element.content}
         inspection="takedown" />
       <Section {...this.props}
-        instructions={this.props.element.equipment_instructions}
-        data={this.props.data.sections_attributes.find(s => s.title === "Equipment")}
+        instructions={this.props.instructions.equipmentInstructions}
+        data={this.props.data.sectionsAttributes.find(s => s.title === "Equipment")}
         handleChange={this.props.handleChange}
-        newComment={this.props.newComments.Equipment.content}
+        newComment={this.props.newComments.equipment.content}
         inspection="takedown" />
       <Section {...this.props}
-        instructions={this.props.element.environment_instructions}
-        data={this.props.data.sections_attributes.find(s => s.title === "Environment")}
+        instructions={this.props.instructions.environmentInstructions}
+        data={this.props.data.sectionsAttributes.find(s => s.title === "Environment")}
         handleChange={this.props.handleChange}
-        newComment={this.props.newComments.Environment.content}
+        newComment={this.props.newComments.environment.content}
         inspection="takedown" />
     </>
   }
@@ -36,8 +36,8 @@ class Takedown extends Component {
           <th>Block 4</th>
         </tr></thead>
         <tbody>
-          {this.props.data.ropes_attributes.map((rope, i) =>{
-          const climb = rope.climbs_attributes[0];
+          {this.props.data.ropesAttributes.map((rope, i) =>{
+          const climb = rope.climbsAttributes[0];
           return <tr key ={i}>
             <td>{rope.identifier}</td>
             <td>

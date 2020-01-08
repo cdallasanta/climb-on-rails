@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Section = ({data: {id, title, complete, comments}, newComment, instructions, handleChange, inspection}) => {
+const Section = ({data: {id, title, complete, commentsAttributes}, newComment, instructions, handleChange, inspection}) => {
 
   function renderComments() {
-    const sortedComments = comments.sort((a,b) => a.id - b.id)
+    const sortedComments = commentsAttributes.sort((a,b) => a.id - b.id)
     return (
       <div className={
           `comments collapsible 

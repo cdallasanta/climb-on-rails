@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import "../stylesheets/global.scss";
-import { Switch, Route, withRouter} from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import AdminContainer from './admin';
 import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
 import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';

@@ -1,7 +1,7 @@
 import {gql} from 'apollo-boost';
 
 const getPreuseInspectionQuery = gql`
-query($elemId: Int!, $date: String) {
+query($elemId: Int!, $date: String!) {
   element(id:$elemId) {
     id
     setupElementInstructions
@@ -11,11 +11,15 @@ query($elemId: Int!, $date: String) {
     takedownEquipmentInstructions
     takedownEnvironmentInstructions
     preuseInspection(date:$date) {
-      setup{
-        sections{
+      setupAttributes: setup{
+        users {
+          fullname
+        }
+        isComplete
+        sectionsAttributes: sections{
           title
           complete
-          comments {
+          commentsAttributes: comments {
             id
             content
             user {
@@ -24,11 +28,25 @@ query($elemId: Int!, $date: String) {
           }
         }
       }
-      takedown{
-        sections{
+      takedownAttributes: takedown{
+        users {
+          fullname
+        }
+        ropesAttributes: ropes {
+            id
+            identifier
+            climbsAttributes: climbs {
+                id
+                block1
+                block2
+                block3
+                block4
+            }
+        }
+        sectionsAttributes: sections{
           title
           complete
-          comments {
+          commentsAttributes: comments {
             id
             content
             user {
@@ -54,10 +72,10 @@ query($elemId: Int!, $date: String!) {
       users {
         fullname
       }
-      sections{
+      sectionsAttributes: sections{
         title
         complete
-        comments {
+        commentsAttributes: comments {
           id
           content
           user {
