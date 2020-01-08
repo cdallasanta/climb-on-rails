@@ -14,13 +14,13 @@ class PeriodicForm extends Component {
     element: {},
     id: parseInt(this.props.match.params.element_id),
     users: [],
-    alert_message: [],
+    alertMessage: {},
     newComments: {
       Equipment: {content: ""},
       Element: {content: ""},
       Environment: {content: ""}
     },
-
+    changed: false
   }
 
   resetTextboxes = () => {
@@ -33,7 +33,7 @@ class PeriodicForm extends Component {
     });
   }
 
-  handleChange = event =>{
+  handleChange = event => {
     if (event.target.attributes.type.value === "textarea") {
       // changing comment
       const {name, value} = event.target;
@@ -51,9 +51,11 @@ class PeriodicForm extends Component {
         return state.sections_attributes.find(s => s.title === name).complete = checked;
       });
     }
+    this.setState({changed: true, alertMessage: {}});
+  }
 
-    document.getElementById('submit-button').disabled = false;
-    document.getElementById('submit-button').value = "Submit";
+  handleDateChange = date => {
+    this.setState({date: date})
   }
 
   renderUpdatedBy = () => {
@@ -103,7 +105,7 @@ class PeriodicForm extends Component {
           if(resp.status === 200){
             this.setState(resp.data);
             this.resetTextboxes();
-            this.setState({alert_message: [{type:"success", message:"Inspection successfully updated"}]});
+            this.setState({alertMessage: {type:"success", message:"Inspection successfully updated"}});
           } else {
             this.handleErrors(resp.errors);
           }
@@ -115,7 +117,7 @@ class PeriodicForm extends Component {
           if(resp.status === 200){
             this.setState(resp.data);
             this.resetTextboxes();
-            this.setState({alert_message: [{type:"success", message:"Inspection successfully logged"}]});
+            this.setState({alertMessage: {type:"success", message:"Inspection successfully logged"}});
             this.props.history.push(`/periodic_inspections/elements/${elemId}/edit`);
           } else {
             this.handleErrors(resp.errors);
@@ -125,8 +127,8 @@ class PeriodicForm extends Component {
   }
 
   renderAlert = () => {
-    if (this.state.alert_message.length > 0) {
-      const alert = this.state.alert_message[0];
+    const alert = this.state.alertMessage;
+    if (Object.keys(alert).length > 0) {
       return (
         <div className={`alert alert-${alert.type}`}>
           <ul>
@@ -162,10 +164,10 @@ class PeriodicForm extends Component {
   queryCompleted = resp => {
     if (resp.periodicInspection.id !== null){
       this.props.history.push(`/periodic_inspections/elements/${resp.id}/edit`);
-      this.setState({alert_message: [{type:"info", message:"Previous inspection loaded"}]});
+      this.setState({alertMessage: {type:"info", message:"Previous inspection loaded", changed: false}});
     } else {
       this.props.history.push(`/periodic_inspections/elements/${resp.id}/new`);
-      this.setState({alert_message: []});
+      this.setState({alertMessage: {}, changed: false});
     }
     this.resetTextboxes();
     this.updateStateFromQuery(resp);
@@ -192,7 +194,8 @@ class PeriodicForm extends Component {
           date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
         }}
         fetchPolicy="network-only"
-        onCompleted={(data)=> this.queryCompleted(data.element)}>
+        onCompleted={(data)=> this.queryCompleted(data.element)}
+        onError={(error) => console.log(error)}>
 
         {({loading}) => {
           if (loading) return null;
@@ -203,13 +206,13 @@ class PeriodicForm extends Component {
             <form onSubmit={this.handleSubmit.bind(this)} >
               <div className="form-group">
                 <label htmlFor="date">Date</label>
-                <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.checkDateForInspection} />
+                <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
               </div>
 
               {this.state.sections_attributes ?
                 this.renderSections() : null }
 
-              <input type="submit" id="submit-button" />
+              <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>
 
               {this.renderUpdatedBy()}
             </form>
