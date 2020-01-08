@@ -34,4 +34,4 @@ query($date: String!) {
 }
 `
 
-export {getElementsQuery, signInMutation, siteStatusQuery, getPreuseInspectionQuery, getPeriodicInspectionQuery}
+export { getElementsQuery, signInMutation, siteStatusQuery }

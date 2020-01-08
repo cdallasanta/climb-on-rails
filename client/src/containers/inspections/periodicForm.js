@@ -6,7 +6,7 @@ import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { graphql, Query } from 'react-apollo';
-import {getPeriodicInspectionQuery} from '../../queries/queries';
+import {getPeriodicInspectionQuery} from '../../queries/inspections';
 
 class PeriodicForm extends Component {
   state = {
