@@ -21,7 +21,7 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
     variables: {date: formattedDate},
     pollInterval: 60000,
     fetchPolicy: "no-cache"
-  })
+  });
   
   return <div className="dashboard">
     <DatePicker selected={date} onChange={(date) => setDate(date)} />

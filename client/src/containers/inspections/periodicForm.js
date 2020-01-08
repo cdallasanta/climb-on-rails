@@ -44,7 +44,7 @@ class PeriodicForm extends Component {
         return Object.assign({}, state, {newComments: newComments})
       });
     } else if (event.target.attributes.type.value === "checkbox") {
-      //chaning checkbox
+      //changing checkbox
       const {name, checked} = event.target;
   
       this.setState(state => {
@@ -142,17 +142,17 @@ class PeriodicForm extends Component {
       return <>
         <Section
           handleChange={this.handleChange}
-          instructions={this.state.element.element_instructions}
+          instructions={this.state.element.elementInstructions}
           data={this.state.sections_attributes.find(s => s.title === "Element")}
           newComment={this.state.newComments.Element.content} />
         <Section
           handleChange={this.handleChange}
-          instructions={this.state.element.equipment_instructions}
+          instructions={this.state.element.equipmentInstructions}
           data={this.state.sections_attributes.find(s => s.title === "Equipment")}
           newComment={this.state.newComments.Equipment.content} />
         <Section
           handleChange={this.handleChange}
-          instructions={this.state.element.environment_instructions}
+          instructions={this.state.element.environmentInstructions}
           data={this.state.sections_attributes.find(s => s.title === "Environment")}
           newComment={this.state.newComments.Environment.content} />
       </>
@@ -160,7 +160,7 @@ class PeriodicForm extends Component {
   }
 
   queryCompleted = resp => {
-    if (resp.periodicInspetion.id !== null){
+    if (resp.periodicInspection.id !== null){
       this.props.history.push(`/periodic_inspections/elements/${resp.id}/edit`);
       this.setState({alert_message: [{type:"info", message:"Previous inspection loaded"}]});
     } else {
@@ -172,9 +172,15 @@ class PeriodicForm extends Component {
   }
 
   updateStateFromQuery = data => {
-// this.state.users
-
-// sections_attributes: this.state.sections_attributes,
+    this.setState({
+      users: data.periodicInspection.users,
+      sections_attributes: data.periodicInspection.sections,
+      element: {
+        equipmentInstructions: data.periodicEquipmentInstructions,
+        elementInstructions: data.periodicElementInstructions,
+        environmentInstructions: data.periodicEnvironmentInstructions,
+      }
+    });
   }
 
   render() {
@@ -183,8 +189,9 @@ class PeriodicForm extends Component {
         query={getPeriodicInspectionQuery}
         variables={{
           elemId: this.state.id,
-          date: this.state.date
+          date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
         }}
+        fetchPolicy="network-only"
         onCompleted={(data)=> this.queryCompleted(data.element)}>
 
         {({loading}) => {

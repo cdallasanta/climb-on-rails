@@ -63,9 +63,11 @@ query($elemId: Int!, $date: String!) {
     periodicEnvironmentInstructions
     periodicInspection(date:$date){
       id
-      users
+      users {
+        fullname
+      }
       sections{
-        id
+        title
         complete
         comments {
           id
