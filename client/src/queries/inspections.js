@@ -1,8 +1,8 @@
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 
 const getPreuseInspectionQuery = gql`
-query($elemId: Int!, $date: String!) {
-  element(id:$elemId) {
+query($elementId: Int!, $date: String!) {
+  element(id:$elementId) {
     id
     setupElementInstructions
     setupEquipmentInstructions
@@ -17,6 +17,7 @@ query($elemId: Int!, $date: String!) {
         }
         isComplete
         sectionsAttributes: sections{
+          id
           title
           complete
           commentsAttributes: comments {
@@ -44,6 +45,7 @@ query($elemId: Int!, $date: String!) {
           }
         }
         sectionsAttributes: sections{
+          id
           title
           complete
           commentsAttributes: comments {
@@ -61,8 +63,8 @@ query($elemId: Int!, $date: String!) {
 `
 
 const getPeriodicInspectionQuery = gql`
-query($elemId: Int!, $date: String!) {
-  element(id:$elemId) {
+query($elementId: Int!, $date: String!) {
+  element(id:$elementId) {
     id
     periodicElementInstructions
     periodicEquipmentInstructions
@@ -73,6 +75,7 @@ query($elemId: Int!, $date: String!) {
         fullname
       }
       sectionsAttributes: sections{
+        id
         title
         complete
         commentsAttributes: comments {
@@ -89,10 +92,28 @@ query($elemId: Int!, $date: String!) {
 `
 
 const savePeriodicMutation = gql`
-mutation($payload: String!) {
-  savePeriodic(payload: $payload){
+mutation($data: PeriodicInput!) {
+  savePeriodic(data: $data){
     status
     errors
+    periodicInspection{
+      id
+      users {
+        fullname
+      }
+      sectionsAttributes: sections{
+        id
+        title
+        complete
+        commentsAttributes: comments {
+          id
+          content
+          user {
+            fullname
+          }
+        }
+      }
+    }
   }
 }
 `

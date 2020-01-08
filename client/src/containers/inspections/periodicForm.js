@@ -4,15 +4,14 @@ import '../../stylesheets/inspection_forms.scss';
 import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Query } from 'react-apollo';
+import { Query, graphql, useMutation } from 'react-apollo';
 import { getPeriodicInspectionQuery, savePeriodicMutation } from '../../queries/inspections';
-import { graphql } from 'graphql';
 
 class PeriodicForm extends Component {
   state = {
     date: new Date(),
     element: {},
-    id: parseInt(this.props.match.params.element_id),
+    elementId: parseInt(this.props.match.params.element_id),
     users: [],
     alertMessage: {},
     newComments: {
@@ -74,65 +73,68 @@ class PeriodicForm extends Component {
   }
 
   gatherDataFromState = () => {
+    const date = this.state.date
+    const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
     const data = {
       id: this.state.id,
-      date: this.state.date,
-      sections_attributes: this.state.sections_attributes,
-      current_user: this.props.currentUser
-    }
+      elementId: this.state.elementId,
+      date: formattedDate,
+      sectionsAttributes: JSON.parse(JSON.stringify(this.state.sectionsAttributes))
+    } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
 
-    data.sections_attributes.forEach(section =>{
+    data.sectionsAttributes.forEach(section => {
+      // remove user key, since graphql doesn't accept it
+      section.commentsAttributes.forEach(comment => {
+        delete comment.user;
+      })
+
+      // add in new comments
       const matchedComment = this.state.newComments[section.title];
-      section.comments_attributes.push({
+      section.commentsAttributes.push({
         id: null,
-        content: matchedComment.content,
-        user_id: data.current_user.id
+        content: matchedComment.content
       })
     });
 
     return data;
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
-    const elemId = this.state.element.id;
     const data = this.gatherDataFromState();
 
-    // if (this.state.id){
-    //   const url = `/api/v1/elements/${elemId}/periodic_inspections/${this.state.id}`;
-    //   axios.patch(url,{periodic_inspection: data, user_id: this.props.currentUser.id})
-    //     .then(resp => {
-    //       if(resp.status === 200){
-    //         this.setState(resp.data);
-    //         this.resetTextboxes();
-    //         this.setState({alertMessage: {type:"success", message:"Inspection successfully updated"}});
-    //       } else {
-    //         this.handleErrors(resp.errors);
-    //       }
-    //     })
-    // } else {
-    //   const url = `/api/v1/elements/${elemId}/periodic_inspections/`;
-    //   axios.post(url,{periodic_inspection: data, user_id: this.props.currentUser.id})
-    //     .then(resp => {
-    //       if(resp.status === 200){
-    //         this.setState(resp.data);
-    //         this.resetTextboxes();
-    //         this.setState({alertMessage: {type:"success", message:"Inspection successfully logged"}});
-    //         this.props.history.push(`/periodic_inspections/elements/${elemId}/edit`);
-    //       } else {
-    //         this.handleErrors(resp.errors);
-    //       }
-    //     })
-    // }
+    this.props.savePeriodicMutation({
+      variables: {data: data}
+    }).then(({data: {savePeriodic: {status, errors, periodicInspection}}}) => {
+      if (status === "200"){
+        this.props.history.push(`/periodic_inspections/elements/${this.state.elementId}/edit`);
+        this.setState({
+          id: periodicInspection.id,
+          users: periodicInspection.users,
+          sectionsAttributes: periodicInspection.sectionsAttributes,
+          alertMessage: {
+            type: "success",
+            message: ["Inspection successfully saved"]
+          }
+        }, () => this.resetTextboxes());
+      } else {
+        this.setState({
+          alertMessage: {
+            type: "",
+            message: errors
+          }
+        })
+      }
+    })
   }
 
   renderAlert = () => {
-    const alert = this.state.alertMessage;
-    if (Object.keys(alert).length > 0) {
+    const alerts = this.state.alertMessage;
+    if (Object.keys(alerts).length > 0) {
       return (
-        <div className={`alert alert-${alert.type}`}>
+        <div className={`alert alert-${alerts.type}`}>
           <ul>
-            <li>{alert.message}</li>
+            {alerts.message.map((msg, i) => <li key={i}>{msg}</li>)}
           </ul>
         </div>
       )
@@ -164,19 +166,27 @@ class PeriodicForm extends Component {
   queryCompleted = resp => {
     if (resp.periodicInspection.id !== null){
       this.props.history.push(`/periodic_inspections/elements/${resp.id}/edit`);
-      this.setState({alertMessage: {type:"info", message:"Previous inspection loaded", changed: false}});
+      this.setState({
+        alertMessage: {type:"info", message:["Previous inspection loaded"]},
+        changed: false
+      });
     } else {
       this.props.history.push(`/periodic_inspections/elements/${resp.id}/new`);
-      this.setState({alertMessage: {}, changed: false});
+      this.setState({
+        id: resp.periodicInspection.id,
+        alertMessage: {},
+        changed: false
+      });
     }
     this.resetTextboxes();
     this.updateStateFromQuery(resp);
   }
 
-  updateStateFromQuery = data => {
+  updateStateFromQuery = (data) => {
     this.setState({
+      id: data.periodicInspection.id,
       users: data.periodicInspection.users,
-      sectionsattributes: data.periodicInspection.sectionsAttributes,
+      sectionsAttributes: data.periodicInspection.sectionsAttributes,
       element: {
         equipmentInstructions: data.periodicEquipmentInstructions,
         elementInstructions: data.periodicElementInstructions,
@@ -190,20 +200,20 @@ class PeriodicForm extends Component {
       <Query
         query={getPeriodicInspectionQuery}
         variables={{
-          elemId: this.state.id,
+          elementId: this.state.elementId,
           date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
         }}
         fetchPolicy="network-only"
         onCompleted={(data)=> this.queryCompleted(data.element)}
         onError={(error) => console.log(error)}>
 
-        {({loading}) => {
+        {({loading, refetch}) => {
           if (loading) return null;
           return <>
             {this.renderAlert()}
 
             <div id="periodic-inspection-form">
-            <form onSubmit={this.handleSubmit.bind(this)} >
+            <form onSubmit={(e) => this.handleSubmit(e, refetch)} >
               <div className="form-group">
                 <label htmlFor="date">Date</label>
                 <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
@@ -224,6 +234,6 @@ class PeriodicForm extends Component {
   }
 }
 
-export default graphql(
-  savePeriodicMutation, {name:{savePeriodicMutation}}
-)(PeriodicForm);
+export default graphql(savePeriodicMutation, {
+  name: "savePeriodicMutation"
+})(PeriodicForm);

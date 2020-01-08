@@ -4,5 +4,5 @@ Inputs::SectionInput = GraphQL::InputObjectType.define do
   argument :id, types.ID
   argument :title, types.String
   argument :complete, types.Boolean
-  argument :commentsAttributes, types[Inputs::CommentInput], as: :sections_attributes
+  argument :commentsAttributes, types[Inputs::CommentInput], as: :comments_attributes
 end

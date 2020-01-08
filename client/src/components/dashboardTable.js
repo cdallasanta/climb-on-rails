@@ -16,7 +16,7 @@ const DashboardTable = ({date, setDate, lastUpdated}) => {
     })
   }
 
-  const formattedDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+  const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
   const { data } = useQuery(siteStatusQuery, {
     variables: {date: formattedDate},
     pollInterval: 60000,

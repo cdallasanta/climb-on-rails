@@ -4,17 +4,17 @@ module Mutations
 
     field :status, String, null: false
     field :errors, [String], null: true
+    field :periodicInspection, Types::PeriodicInspectionType, null: true
 
     def resolve(**args)
-      params = args.to_h
-      binding.pry
+      @params = args[:data].to_h
       
-      # if params[:id]
-      #   @inspection = PeriodicInspection.find(params[:id])
-      # else
-      #   @inspection = PeriodicInspection.new(element_id: params[:element_id])
-      # end
-      # return save_and_return
+      if @params["id"]
+        @inspection = PeriodicInspection.find(@params["id"])
+      else
+        @inspection = PeriodicInspection.new(element_id: @params["element_id"])
+      end
+      save_and_return
     end
 
     private
@@ -22,50 +22,42 @@ module Mutations
     def save_and_return
       remove_empty_comments
       current_user = context[:current_user]
-
+      if @inspection.id == nil
+        @inspection.sections = []
+      end
+      
       # if the inspection will change when saved,
       # add the current user to be referenced by 'edited by'
-      @inspection.assign_attributes(params)
+      @inspection.assign_attributes(@params)
       if @inspection.changed_for_autosave?
         @inspection.users << current_user unless @inspection.users.include?(current_user)
         if @inspection.save
-          render json: {
-            status: 200
+          return {
+            status: 200,
+            periodic_inspection: @inspection
           }
         else
-          render json: {
+          return {
             status: 400,
             errors: @inspection.errors.messages
           }
         end
       else
-        render json: {
+        return {
           status: 204
         }
       end
     end
-
-    def periodic_params
-      @params.assert_valid_keys(
-        :id,
-        :date,
-        :sections_attributes => [
-          :id,
-          :title,
-          :complete,
-          :comments_attributes => [
-            :user_id,
-            :id,
-            :content
-          ]
-        ]
-      )
-    end
     
     def remove_empty_comments
-      @params[:sections_attributes].each do |section|
-        section[:comments_attributes].delete_if do |comment|
-          comment[:content] == ""
+      @params["sections_attributes"].each do |section|
+        section["comments_attributes"].delete_if do |comment|
+          comment["content"] == ""
+        end
+        section["comments_attributes"].each do |comment|
+          if comment[:user_id] == nil
+            comment[:user_id] = context[:current_user].id
+          end
         end
       end
     end
