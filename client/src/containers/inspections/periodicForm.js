@@ -115,7 +115,8 @@ class PeriodicForm extends Component {
           alertMessage: {
             type: "success",
             message: ["Inspection successfully saved"]
-          }
+          },
+          changed: false
         }, () => this.resetTextboxes());
       } else {
         this.setState({

@@ -22,6 +22,8 @@ module Mutations
     def save_and_return
       remove_empty_comments
       current_user = context[:current_user]
+
+      # TODO there has to be a better way to deal with :after_initialize and it's relics
       if @inspection.id == nil
         @inspection.sections = []
       end
