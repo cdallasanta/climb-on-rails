@@ -3,18 +3,41 @@ import {gql} from 'apollo-boost';
 const getPreuseInspectionQuery = gql`
 query($elemId: Int!, $date: String) {
   element(id:$elemId) {
-      preuseInspection(date:$date) {
-          setup{
-              sections{
-                  complete
-              }
+    id
+    setupElementInstructions
+    setupEquipmentInstructions
+    setupEnvironmentInstructions
+    takedownElementInstructions
+    takedownEquipmentInstructions
+    takedownEnvironmentInstructions
+    preuseInspection(date:$date) {
+      setup{
+        sections{
+          title
+          complete
+          comments {
+            id
+            content
+            user {
+              fullname
+            }
           }
-          takedown{
-              sections {
-                  complete
-              }
-          }
+        }
       }
+      takedown{
+        sections{
+          title
+          complete
+          comments {
+            id
+            content
+            user {
+              fullname
+            }
+          }
+        }
+      }
+    }
   }
 }
 `
