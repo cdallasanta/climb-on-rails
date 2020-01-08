@@ -88,4 +88,7 @@ query($elemId: Int!, $date: String!) {
 }
 `
 
-export { getPreuseInspectionQuery, getPeriodicInspectionQuery }
+const savePeriodicMutation = gql`
+`
+
+export { getPreuseInspectionQuery, getPeriodicInspectionQuery, savePeriodicMutation }

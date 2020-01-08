@@ -5,7 +5,8 @@ import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Query } from 'react-apollo';
-import { getPeriodicInspectionQuery } from '../../queries/inspections';
+import { getPeriodicInspectionQuery, savePeriodicMutation } from '../../queries/inspections';
+import { graphql } from 'graphql';
 
 class PeriodicForm extends Component {
   state = {
@@ -223,4 +224,6 @@ class PeriodicForm extends Component {
   }
 }
 
-export default PeriodicForm;
+export default graphql(
+  savePeriodicMutation, {name:{savePeriodicMutation}}
+)(PeriodicForm);
