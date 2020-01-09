@@ -39,8 +39,10 @@ p @params
 p ""
 p "~~~~~~~~~~~~~~~"
 
+p "Assigning attributes"
       @inspection.assign_attributes(@params)
       
+p "~~~~~~~~~~~~~~~"
       # save and create takedown or return errors
       if @inspection.changed_for_autosave?
         # add current user to setup and takedown's "updated by"
@@ -51,6 +53,8 @@ p "~~~~~~~~~~~~~~~"
           @inspection.takedown.users << current_user unless @inspection.takedown.users.include?(current_user)
         end
 
+        p "~~~~~~~~~~~~~~~"
+        p "Saving:"
         if @inspection.save
           if @inspection.setup.is_complete? && @inspection.takedown == nil
             @inspection.takedown = PreuseInspection::Takedown.create(preuse_inspection: @inspection)
