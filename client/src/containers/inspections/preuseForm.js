@@ -213,6 +213,7 @@ class PreuseForm extends Component {
 
   updateStateFromQuery = data => {
     this.setState({
+      id: data.preuseInspection.id,
       setupAttributes: data.preuseInspection.setupAttributes,
       takedownAttributes: data.preuseInspection.takedownAttributes,
       instructions: {

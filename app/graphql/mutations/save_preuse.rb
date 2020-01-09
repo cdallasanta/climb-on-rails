@@ -29,7 +29,7 @@ module Mutations
         @inspection.setup.sections = []
         @params = @params.except("takedown_attributes")
       end
-
+      
       @inspection.assign_attributes(@params)
       
       # save and create takedown or return errors
