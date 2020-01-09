@@ -50,7 +50,7 @@ class Header extends React.Component {
           <NavLink to="/periodic_inspections" className="nav-link" activeClassName="selected">Periodic Inspections</NavLink>
         </div>
         <div>
-          <NavLink to="/elements" className="nav-link" activeClassName="selected">My Profile (broken)</NavLink>
+          <NavLink to="/elements" className="nav-link" activeClassName="selected">My Profile (in development)</NavLink>
         </div>
         <div>
           <NavLink to="/logout" className="nav-link" activeClassName="selected"
@@ -68,8 +68,8 @@ class Submenu extends React.Component {
     return (
       <div className="sub-links">
         <NavLink to="/admin/dashboard">Dashboard</NavLink>
-        <NavLink to="/admin/elements">Elements</NavLink>
-        <NavLink to="/admin/users">Users</NavLink>
+        <NavLink to="/admin/elements">Elements (in development)</NavLink>
+        <NavLink to="/admin/users">Users (in development)</NavLink>
       </div>
     )
   }
