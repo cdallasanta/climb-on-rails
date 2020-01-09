@@ -151,7 +151,8 @@ class PreuseForm extends Component {
         }
       }
     }
-
+    // TODO be sure to remove this
+console.log(data);
     return data;
   }
 
@@ -162,6 +163,7 @@ class PreuseForm extends Component {
     this.props.savePreuseMutation({
       variables: {data: data}
     }).then(({data: {savePreuse: {status, errors, preuseInspection}}}) => {
+      debugger;
       if (status === "200"){
         this.props.history.push(`/preuse_inspections/elements/${this.state.elementId}/edit`);
         this.setState({

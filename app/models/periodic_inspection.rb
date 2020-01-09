@@ -9,10 +9,6 @@ class PeriodicInspection < ApplicationRecord
   validates :date, presence: true, uniqueness: {scope: :element}
   validates_presence_of :element
 
-  def self.find_or_init_past_inspection(args)
-    self.find_or_initialize_by(args)
-  end
-
   def create_sections
     if self.sections.length != 3
       self.sections.new(title: "Element")

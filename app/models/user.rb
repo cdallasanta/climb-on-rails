@@ -11,7 +11,7 @@ class User < ApplicationRecord
   has_many :comments
   
 
-  #  this is a placeholder for development, and should be removed when admins can create users
+  # TODO this is a placeholder for development, and should be removed when admins can create users
   after_initialize :set_defaults
 
   def set_defaults
