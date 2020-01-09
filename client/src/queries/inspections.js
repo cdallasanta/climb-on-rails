@@ -13,6 +13,7 @@ query($elementId: Int!, $date: String!) {
     preuseInspection(date:$date) {
       id
       setupAttributes: setup{
+        id
         users {
           fullname
         }
@@ -31,19 +32,19 @@ query($elementId: Int!, $date: String!) {
         }
       }
       takedownAttributes: takedown{
+        id
         users {
           fullname
         }
-        ropesAttributes: ropes {
+        climbsAttributes: climbs {
           id
-          identifier
-          climbsAttributes: climbs {
+          block1
+          block2
+          block3
+          block4
+          rope {
             id
-            ropeId
-            block1
-            block2
-            block3
-            block4
+            identifier
           }
         }
         sectionsAttributes: sections{
@@ -128,6 +129,7 @@ mutation($data: PreuseInput!) {
     preuseInspection {
       id
       setupAttributes: setup{
+        id
         users {
           fullname
         }
@@ -146,18 +148,19 @@ mutation($data: PreuseInput!) {
         }
       }
       takedownAttributes: takedown{
+        id
         users {
           fullname
         }
-        ropesAttributes: ropes {
+        climbsAttributes: climbs {
           id
-          identifier
-          climbsAttributes: climbs {
-              id
-              block1
-              block2
-              block3
-              block4
+          block1
+          block2
+          block3
+          block4
+          rope {
+            id
+            identifier
           }
         }
         sectionsAttributes: sections{

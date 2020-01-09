@@ -30,8 +30,7 @@ module Mutations
         @params = @params.except("takedown_attributes")
       end
 
-      # assign attributes - needed to do this weird nesting thing since AR couldn't find
-      # the nested sections in the setup and takedown if they already existed
+      binding.pry
       @inspection.assign_attributes(@params)
       
       # save and create takedown or return errors
@@ -45,7 +44,7 @@ module Mutations
         end
 
         if @inspection.save
-          if @inspection.setup.is_complete?
+          if @inspection.setup.is_complete? && @inspection.takedown == nil
             @inspection.takedown = PreuseInspection::Takedown.create(preuse_inspection: @inspection)
             @inspection.element.ropes.each do |rope|
               @inspection.takedown.climbs.new(rope:rope)
@@ -54,7 +53,7 @@ module Mutations
           end
           return {
             status: 200,
-            periodic_inspection: @inspection
+            preuse_inspection: @inspection
           }
         else
           return {

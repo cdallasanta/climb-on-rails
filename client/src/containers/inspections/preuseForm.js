@@ -50,18 +50,16 @@ class PreuseForm extends Component {
     if (event.target.attributes.type.value === "number"){
       // changing climbs number from takedown
       const {name, value} = event.target;
-      const ropeId = parseInt(event.target.getAttribute('rope-id'));
+      const climbId = parseInt(event.target.getAttribute('climb-id'));
 
       this.setState(state => {
-        const takedownAttributes = state.takedownAttributes;
-        const rope = takedownAttributes.ropesAttributes.find(r => r.id === ropeId);
-
-        rope.climbsAttributes[0][name] = parseInt(value);
-
+        const {takedownAttributes} = state;
+        const climb = takedownAttributes.climbsAttributes.find(r => r.id === climbId);
+        climb[name] = parseInt(value);
         return {
           takedownAttributes
         }
-      }, () => console.log(this.state))
+      })
 
     } else if (event.target.attributes.type.value === "textarea") {
       // changing comment
@@ -111,21 +109,25 @@ class PreuseForm extends Component {
     const date = this.state.date
     const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
     const setupAttributes = {
+      id: this.state.setupAttributes.id,
       sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes))
     };
-
+    
     let takedownAttributes = null;
     if (this.state.takedownAttributes){
-      takedownAttributes = {
-        sectionsAttributes: JSON.parse(JSON.stringify(this.state.takedownAttributes.sectionsAttributes)),
-        climbsAttributes: []
-      }; // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
-  
-      this.state.takedownAttributes.ropesAttributes.forEach(rope => {
-        takedownAttributes.climbsAttributes.push(rope.climbsAttributes[0]);
+      const climbsCopy = JSON.parse(JSON.stringify(this.state.takedownAttributes.climbsAttributes));
+      const climbsReduced = climbsCopy.map(climb => {
+        delete climb["rope"];
+        return climb;
       })
-    }
 
+      takedownAttributes = {
+        id: this.state.takedownAttributes.id,
+        sectionsAttributes: JSON.parse(JSON.stringify(this.state.takedownAttributes.sectionsAttributes)),
+        climbsAttributes: climbsReduced
+      } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
+    }
+    
     const data = {
       id: this.state.id,
       date: formattedDate,
@@ -163,9 +165,7 @@ class PreuseForm extends Component {
       if (status === "200"){
         this.props.history.push(`/preuse_inspections/elements/${this.state.elementId}/edit`);
         this.setState({
-          id: preuseInspection.id,
-          users: preuseInspection.users,
-          sectionsAttributes: preuseInspection.sectionsAttributes,
+          ...preuseInspection,
           alertMessage: {
             type: "success",
             message: ["Inspection successfully saved"]
