@@ -15,7 +15,7 @@ Climb On is a web app for challenge course managers (CCM) to cut down on the tre
 This site is live at [climb-on.org](climb-on.org). You can access it with the username: `demo@email.com` and password: `demopass`
 
 ## Contributing
-Bug reports and pull requests are welcome on GitHub at https://github.com/cdallasanta/climb-on-rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the Contributor Covenant code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/cdallasanta/climb-on. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the Contributor Covenant code of conduct.
 
 ## License
 The project is available as open source under the terms of the GNU General Public License.

@@ -1,9 +1,9 @@
 {
-  "name": "climb-on-rails",
+  "name": "climb-on",
   "version": "1.0.0",
   "description": "Web app version of the Backyard Birding board game.",
   "main": "index.js",
-  "homepage": "https://github.com/cdallasanta/climb-on-rails#readme",
+  "homepage": "https://github.com/cdallasanta/climb-on#readme",
   "directories": {
     "lib": "lib",
     "test": "test"
@@ -21,11 +21,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cdallasanta/climb-on-rails.git"
+    "url": "git+https://github.com/cdallasanta/climb-on.git"
   },
   "author": "Chris Dalla Santa",
   "license": "GNU",
   "bugs": {
-    "url": "https://github.com/cdallasanta/climb-on-rails/issues"
+    "url": "https://github.com/cdallasanta/climb-on/issues"
   }
 }
