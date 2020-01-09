@@ -113,14 +113,18 @@ class PreuseForm extends Component {
     const setupAttributes = {
       sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes))
     };
-    const takedownAttributes = {
-      sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes)),
-      climbsAttributes: []
-    }; // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
 
-    this.state.takedownAttributes.ropesAttributes.forEach(rope => {
-      takedownAttributes.climbsAttributes.push(rope.climbsAttributes[0]);
-    })
+    let takedownAttributes = null;
+    if (this.state.takedownAttributes){
+      takedownAttributes = {
+        sectionsAttributes: JSON.parse(JSON.stringify(this.state.takedownAttributes.sectionsAttributes)),
+        climbsAttributes: []
+      }; // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
+  
+      this.state.takedownAttributes.ropesAttributes.forEach(rope => {
+        takedownAttributes.climbsAttributes.push(rope.climbsAttributes[0]);
+      })
+    }
 
     const data = {
       id: this.state.id,
@@ -131,6 +135,9 @@ class PreuseForm extends Component {
     };
 
     for(const insp in this.state.newComments){
+      if (insp === "takedown" && takedownAttributes === null){
+        continue;
+      }
       for(const sectionTitle in this.state.newComments[insp]){
         if (data[`${insp}Attributes`]){
           const section = data[`${insp}Attributes`].sectionsAttributes.find(s => s.title === sectionTitle);
@@ -142,7 +149,6 @@ class PreuseForm extends Component {
         }
       }
     }
-    debugger;
 
     return data;
   }
@@ -256,7 +262,7 @@ class PreuseForm extends Component {
                   newComments={this.state.newComments.setup}
                 /> : null}
 
-              {this.state.setupAttributes && this.state.setupAttributes.isComplete ?
+              {this.state.takedownAttributes ?
                 <><hr /><Takedown data={this.state.takedownAttributes}
                   renderUpdatedBy={this.renderUpdatedBy}
                   handleChange={this.handleChange}

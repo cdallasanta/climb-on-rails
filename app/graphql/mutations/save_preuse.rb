@@ -8,7 +8,6 @@ module Mutations
 
     def resolve(**args)
       check_authentication!
-      binding.pry
       @params = args[:data].to_h
       
       if @params["id"]
@@ -22,26 +21,37 @@ module Mutations
     private
 
     def save_and_return
-      check_authentication!
-      
       remove_empty_comments
       current_user = context[:current_user]
+
+      # TODO there has to be a better way to deal with :after_initialize and it's relics
+      if @inspection.id == nil
+        @inspection.setup.sections = []
+        @params = @params.except("takedown_attributes")
+      end
 
       # assign attributes - needed to do this weird nesting thing since AR couldn't find
       # the nested sections in the setup and takedown if they already existed
       @inspection.assign_attributes(@params)
-
-      # add current user to setup and takedown's "updated by"
-      if @inspection.setup.changed_for_autosave?
-        @inspection.setup.users << current_user unless @inspection.setup.users.include?(current_user)
-      end
-      if @inspection.takedown.changed_for_autosave?
-        @inspection.takedown.users << current_user unless @inspection.takedown.users.include?(current_user)
-      end
       
       # save and create takedown or return errors
       if @inspection.changed_for_autosave?
+        # add current user to setup and takedown's "updated by"
+        if @inspection.setup.changed_for_autosave?
+          @inspection.setup.users << current_user unless @inspection.setup.users.include?(current_user)
+        end
+        if @inspection.takedown&.changed_for_autosave?
+          @inspection.takedown.users << current_user unless @inspection.takedown.users.include?(current_user)
+        end
+
         if @inspection.save
+          if @inspection.setup.is_complete?
+            @inspection.takedown = PreuseInspection::Takedown.create(preuse_inspection: @inspection)
+            @inspection.element.ropes.each do |rope|
+              @inspection.takedown.climbs.new(rope:rope)
+            end
+            @inspection.takedown.save
+          end
           return {
             status: 200,
             periodic_inspection: @inspection
@@ -54,7 +64,8 @@ module Mutations
         end
       else
         return {
-          status: 204
+          status: 204,
+          errors: ["No changes detected, inspection not saved."]
         }
       end
     end
@@ -71,13 +82,15 @@ module Mutations
         end
       end
 
-      @params["takedown_attributes"]["sections_attributes"].each do |section|
-        section["comments_attributes"].delete_if do |comment|
-          comment["content"] == ""
-        end
-        section["comments_attributes"].each do |comment|
-          if comment[:user_id] == nil
-            comment[:user_id] = context[:current_user].id
+      if (@params["takedown_attributes"])
+        @params["takedown_attributes"]["sections_attributes"].each do |section|
+          section["comments_attributes"].delete_if do |comment|
+            comment["content"] == ""
+          end
+          section["comments_attributes"].each do |comment|
+            if comment[:user_id] == nil
+              comment[:user_id] = context[:current_user].id
+            end
           end
         end
       end
