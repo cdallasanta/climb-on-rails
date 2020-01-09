@@ -3,19 +3,29 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import rootReducer from './reducers/rootReducer';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const store = createStore(rootReducer, {},
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const link = createHttpLink({
+  uri: '/graphql',
+  credentials: 'same-origin'
+});
+
+const client = new ApolloClient({
+  cache: new InMemoryCache({
+    addTypename: false
+  }),
+  link,
+});
 
 ReactDOM.render(
-  <Provider store={store}>
+  <ApolloProvider client={client}>
     <Router>
       <App />
     </Router>
-  </Provider>, document.getElementById('root')
+  </ApolloProvider>, document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

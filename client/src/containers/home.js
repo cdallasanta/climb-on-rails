@@ -1,23 +1,15 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import "../stylesheets/global.scss";
-import { Switch, Route, withRouter} from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import AdminContainer from './admin';
 import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
 import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
 import Header from '../components/header';
-import axios from 'axios';
 import * as images from '../images/index';
 
 class Home extends Component {
   state = {
     backgroundImage: ""
-  }
-
-  componentDidMount(){
-    axios.get(`/api/v1/sites/${this.props.currentUser.site_id}`)
-    .then(response => this.props.setSite(response.data))
-    .catch(error => console.log(error))
   }
 
   componentDidUpdate(prevProps){
@@ -68,16 +60,4 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.currentUser
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setSite: (data) => dispatch({type: "SET_SITE", payload: data})
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default withRouter(Home);

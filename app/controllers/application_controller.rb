@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  # protect_from_forgery with: :exception
 
   def login!
     session[:user_id] = @user.id
@@ -12,7 +13,7 @@ class ApplicationController < ActionController::API
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-  # TODO check on this later
+  # TODO check on all of these later
   def authorized_user?
      @user == current_user
   end

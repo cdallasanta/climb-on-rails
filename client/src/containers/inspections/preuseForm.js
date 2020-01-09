@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import '../../stylesheets/preuse_inspections.scss';
 import '../../stylesheets/inspection_forms.scss';
-import axios from 'axios';
 import Setup from '../../components/inspections/setup';
 import Takedown from '../../components/inspections/takedown';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { Query, graphql } from 'react-apollo';
+import { getPreuseInspectionQuery, savePreuseMutation } from '../../queries/inspections';
 
 class PreuseForm extends Component {
   state = {
     date: new Date(),
-    element: {},
-    id: null,
+    instructions: {},
+    elementId: parseInt(this.props.match.params.element_id),
     newComments: {
       setup:{
         Equipment: {content: ""},
@@ -25,7 +25,8 @@ class PreuseForm extends Component {
         Environment: {content: ""}
       }
     },
-    alert_message: []
+    alertMessage: {},
+    changed: false
   }
 
   resetTextboxes = () => {
@@ -49,18 +50,16 @@ class PreuseForm extends Component {
     if (event.target.attributes.type.value === "number"){
       // changing climbs number from takedown
       const {name, value} = event.target;
-      const ropeId = parseInt(event.target.getAttribute('rope-id'));
+      const climbId = parseInt(event.target.getAttribute('climb-id'));
 
       this.setState(state => {
-        const takedown_attributes = state.takedown_attributes;
-        const rope = takedown_attributes.ropes_attributes.find(r => r.id === ropeId);
-
-        rope.climbs_attributes[0][name] = parseInt(value);
-
+        const {takedownAttributes} = state;
+        const climb = takedownAttributes.climbsAttributes.find(r => r.id === climbId);
+        climb[name] = parseInt(value);
         return {
-          takedown_attributes
+          takedownAttributes
         }
-      }, () => console.log(this.state))
+      })
 
     } else if (event.target.attributes.type.value === "textarea") {
       // changing comment
@@ -76,39 +75,18 @@ class PreuseForm extends Component {
       //chaning checkbox
       const {name, checked} = event.target;
       const inspection = event.target.getAttribute("inspection");
-  
+      
       this.setState(state => {
-        const newAttrs = state[`${inspection}_attributes`];
-        newAttrs.sections_attributes.find(s => s.title === name).complete = checked;
-        return Object.assign({}, state, {[`${inspection}_attributes`]: newAttrs})
+        const newAttrs = state[`${inspection}Attributes`];
+        newAttrs.sectionsAttributes.find(s => s.title === name).complete = checked;
+        return Object.assign({}, state, {[`${inspection}Attributes`]: newAttrs})
       });
     }
-
-    document.getElementById('submit-button').disabled = false;
-    document.getElementById('submit-button').value = "Submit";
+    this.setState({changed: true, alertMessage: {}});
   }
 
-  checkDateForInspection = date => {
-    const elemId = this.props.match.params.element_id;
-    axios.get(`/api/v1/elements/${elemId}/preuse_inspections/date/${date}`)
-    .then(resp =>{
-      if (resp.data.id !== null){
-        this.props.history.push(`/preuse_inspections/elements/${elemId}/edit`);
-        this.setState({alert_message: [{type:"info", message:"Previous inspection loaded"}]});
-      } else {
-        this.props.history.push(`/preuse_inspections/elements/${elemId}/new`);
-        this.setState({alert_message: []});
-      }
-      this.setState({...resp.data, date: Date.parse(resp.data.date)});
-      this.resetTextboxes();
-    })
-    
-    document.getElementById('submit-button').value = "No Changes Yet";
-    document.getElementById('submit-button').disabled = true;
-  }
-
-  componentDidMount(){
-    this.checkDateForInspection(this.state.date);
+  handleDateChange = date => {
+    this.setState({date: date})
   }
 
   // intentionally not using an arrow function so children will use the correct "this"
@@ -127,29 +105,48 @@ class PreuseForm extends Component {
     }
   }
 
-  // // TODO figure out how I want to handle server errors
-  // handleErrors = errors => {
-  //   console.log(errors);
-  // }
-
   gatherDataFromState = () => {
+    const date = this.state.date
+    const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    const setupAttributes = {
+      id: this.state.setupAttributes.id,
+      sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes))
+    };
+    
+    let takedownAttributes = null;
+    if (this.state.takedownAttributes){
+      const climbsCopy = JSON.parse(JSON.stringify(this.state.takedownAttributes.climbsAttributes));
+      const climbsReduced = climbsCopy.map(climb => {
+        delete climb["rope"];
+        return climb;
+      })
+
+      takedownAttributes = {
+        id: this.state.takedownAttributes.id,
+        sectionsAttributes: JSON.parse(JSON.stringify(this.state.takedownAttributes.sectionsAttributes)),
+        climbsAttributes: climbsReduced
+      } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
+    }
+    
     const data = {
       id: this.state.id,
-      date: this.state.date,
-      setup_attributes: this.state.setup_attributes,
-      takedown_attributes: this.state.takedown_attributes,
-      current_user: this.props.currentUser
-    }
+      date: formattedDate,
+      elementId: this.state.elementId,
+      setupAttributes: setupAttributes,
+      takedownAttributes: takedownAttributes
+    };
 
     for(const insp in this.state.newComments){
-      for(const section_title in this.state.newComments[insp]){
-        if (data[`${insp}_attributes`]){
-          const section = data[`${insp}_attributes`].sections_attributes.find(s => s.title === section_title);
+      if (insp === "takedown" && takedownAttributes === null){
+        continue;
+      }
+      for(const sectionTitle in this.state.newComments[insp]){
+        if (data[`${insp}Attributes`]){
+          const section = data[`${insp}Attributes`].sectionsAttributes.find(s => s.title === sectionTitle);
 
-          section.comments_attributes.push({
+          section.commentsAttributes.push({
             id: null,
-            content: this.state.newComments[insp][section_title].content,
-            user_id: data.current_user.id
+            content: this.state.newComments[insp][sectionTitle].content
           })
         }
       }
@@ -160,94 +157,130 @@ class PreuseForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const elemId = this.state.element.id;
     const data = this.gatherDataFromState();
 
-    if (this.state.id){
-      const url = `/api/v1/elements/${elemId}/preuse_inspections/${this.state.id}`;
-      axios.patch(url,{preuse_inspection: data, user_id: this.props.currentUser.id})
-        .then(resp => {
-          if(resp.status === 200){
-            this.setState(resp.data);
-            this.resetTextboxes();
-            this.setState({alert_message: [{type:"success", message:"Inspection successfully updated"}]});
-          } else {
-            this.handleErrors(resp.errors);
+    this.props.savePreuseMutation({
+      variables: {data: data}
+    }).then(({data: {savePreuse: {status, errors, preuseInspection}}}) => {
+      if (status === "200"){
+        this.props.history.push(`/preuse_inspections/elements/${this.state.elementId}/edit`);
+        this.setState({
+          ...preuseInspection,
+          alertMessage: {
+            type: "success",
+            message: ["Inspection successfully saved"]
+          },
+          changed: false
+        }, () => this.resetTextboxes());
+      } else {
+        this.setState({
+          alertMessage: {
+            type: "",
+            message: errors
           }
         })
-    } else {
-      const url = `/api/v1/elements/${elemId}/preuse_inspections/`;
-      axios.post(url,{preuse_inspection: data, user_id: this.props.currentUser.id})
-        .then(resp => {
-          if(resp.status === 200){
-            this.setState(resp.data);
-            this.resetTextboxes();
-            this.setState({alert_message: [{type:"success", message:"Inspection successfully logged"}]});
-            this.props.history.push(`/preuse_inspections/elements/${elemId}/edit`);
-          } else {
-            this.handleErrors(resp.errors);
-          }
-        })
-    }
-    
-    document.getElementById('submit-button').value = "No Changes Yet";
-    document.getElementById('submit-button').disabled = true;
+      }
+    })
   }
 
   renderAlert = () => {
-    if (this.state.alert_message.length > 0) {
-      const alert = this.state.alert_message[0];
+    const alerts = this.state.alertMessage;
+    if (Object.keys(alerts).length > 0) {
       return (
-        <div className={`alert alert-${alert.type}`}>
-          <ul>
-            <li>{alert.message}</li>
+        <div className={`alert alert-${alerts.type}`}>
+        <ul>
+            {alerts.message.map((msg, i) => <li key={i}>{msg}</li>)}
           </ul>
         </div>
       )
     }
   }
 
+  queryCompleted = resp => {
+    if (resp.preuseInspection.id !== null){
+      this.props.history.push(`/preuse_inspections/elements/${resp.id}/edit`);
+      this.setState({alertMessage: {
+        type:"info",
+        message:["Previous inspection loaded"],
+        changed: false}});
+    } else {
+      this.props.history.push(`/preuse_inspections/elements/${resp.id}/new`);
+      this.setState({alertMessage: {}, changed: false});
+    }
+    this.resetTextboxes();
+    this.updateStateFromQuery(resp);
+  }
+
+  updateStateFromQuery = data => {
+    this.setState({
+      id: data.preuseInspection.id,
+      setupAttributes: data.preuseInspection.setupAttributes,
+      takedownAttributes: data.preuseInspection.takedownAttributes,
+      instructions: {
+        setup: {
+          equipmentInstructions: data.setupEquipmentInstructions,
+          elementInstructions: data.setupElementInstructions,
+          environmentInstructions: data.setupEnvironmentInstructions,
+        },
+        takedown: {
+          equipmentInstructions: data.takedownEquipmentInstructions,
+          elementInstructions: data.takedownElementInstructions,
+          environmentInstructions: data.takedownEnvironmentInstructions,
+        }
+      }
+    });
+  }
+
   render() {
     return (
-      <>
-        {this.renderAlert()}
+      <Query
+        query={getPreuseInspectionQuery}
+        variables={{
+          elementId: this.state.elementId,
+          date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
+        }}
+        fetchPolicy="network-only"
+        onCompleted={(data)=> this.queryCompleted(data.element)}
+        onError={(error) => console.log(error)}>
 
-        <div id="preuse-inspection-form">
-          <form onSubmit={this.handleSubmit.bind(this)} >
-            <div className="form-group">
-              <label htmlFor="date">Date</label>
-              <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.checkDateForInspection} />
+        {({loading}) => {
+          if (loading) return null;
+          return <>
+          {this.renderAlert()}
+
+          <div id="preuse-inspection-form">
+            <form onSubmit={this.handleSubmit.bind(this)} >
+              <div className="form-group">
+                <label htmlFor="date">Date</label>
+                <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
+              </div>
+
+              {this.state.setupAttributes ?
+                <Setup data={this.state.setupAttributes}
+                  renderUpdatedBy={this.renderUpdatedBy}
+                  handleChange={this.handleChange}
+                  instructions={this.state.instructions.setup}
+                  newComments={this.state.newComments.setup}
+                /> : null}
+
+              {this.state.takedownAttributes ?
+                <><hr /><Takedown data={this.state.takedownAttributes}
+                  renderUpdatedBy={this.renderUpdatedBy}
+                  handleChange={this.handleChange}
+                  instructions={this.state.instructions.takedown}
+                  newComments={this.state.newComments.takedown}
+                /></> : null}
+
+                <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>
+              </form>
             </div>
-
-            {this.state.setup_attributes ?
-              <Setup data={this.state.setup_attributes}
-                renderUpdatedBy={this.renderUpdatedBy}
-                handleChange={this.handleChange}
-                element={this.state.element}
-                newComments={this.state.newComments.setup}
-              /> : null}
-
-            {this.state.takedown_attributes ?
-              <><hr /><Takedown data={this.state.takedown_attributes}
-                renderUpdatedBy={this.renderUpdatedBy}
-                handleChange={this.handleChange}
-                element={this.state.element}
-                newComments={this.state.newComments.takedown}
-              /></> : null}
-
-            <input type="submit" id="submit-button" />
-
-          </form>
-        </div>
-      </>
+          </>
+        }}
+      </Query>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.currentUser
-  }
-}
-
-export default connect(mapStateToProps)(PreuseForm);
+export default graphql(savePreuseMutation, {
+  name: "savePreuseMutation"
+})(PreuseForm);

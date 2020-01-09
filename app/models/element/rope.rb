@@ -1,7 +1,7 @@
 class Element::Rope < ApplicationRecord
   self.table_name = "ropes"
   belongs_to :element
-  has_many :climbs, class_name: "Element::Rope::Climb"
+  has_many :climbs, class_name: "Element::Rope::Climb", inverse_of: :rope
   has_many :preuse_inspections, through: :element
   accepts_nested_attributes_for :climbs
 
