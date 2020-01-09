@@ -19,6 +19,9 @@ gem 'bcrypt', '~> 3.1.7'
 # Serializer to serve pretty json's from api
 gem 'active_model_serializers'
 
+gem 'pry'
+gem 'pry-rails'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

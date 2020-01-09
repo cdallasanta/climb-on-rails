@@ -53,7 +53,7 @@ class Header extends React.Component {
           <NavLink to="/elements" className="nav-link" activeClassName="selected">My Profile (in development)</NavLink>
         </div>
         <div>
-          <NavLink to="/logout" className="nav-link" activeClassName="selected"
+          <NavLink to="/" className="nav-link" activeClassName="selected"
           onClick={this.props.handleLogout} >Logout</NavLink>
         </div>
         
