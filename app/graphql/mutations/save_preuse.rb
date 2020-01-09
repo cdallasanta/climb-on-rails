@@ -40,6 +40,7 @@ p ""
 p "~~~~~~~~~~~~~~~"
 
 p "Assigning attributes"
+binding.pry
       @inspection.assign_attributes(@params)
       
 p "~~~~~~~~~~~~~~~"
