@@ -4,5 +4,6 @@ module Types
     field :sign_in_user, mutation: Mutations::SignInUser
     field :sign_out_user, mutation: Mutations::SignOutUser
     field :savePeriodic, mutation: Mutations::SavePeriodic
+    field :savePreuse, mutation: Mutations::SavePreuse
   end
 end

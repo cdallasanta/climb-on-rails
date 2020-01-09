@@ -1,12 +1,14 @@
 module Mutations
-  class SavePeriodic < BaseMutation
-    argument :data, Inputs::PeriodicInput, required: true
+  class SavePreuse < BaseMutation
+    argument :data, Inputs::PreuseInput, required: true
 
     field :status, String, null: false
     field :errors, [String], null: true
-    field :periodicInspection, Types::PeriodicInspectionType, null: true
+    field :preuseInspection, Types::PreuseInspectionType, null: true
 
     def resolve(**args)
+      check_authentication!
+      binding.pry
       @params = args[:data].to_h
       
       if @params["id"]
@@ -20,8 +22,6 @@ module Mutations
     private
 
     def save_and_return
-      check_authentication!
-      
       remove_empty_comments
       current_user = context[:current_user]
 
