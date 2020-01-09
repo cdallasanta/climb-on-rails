@@ -24,7 +24,7 @@ class PreuseInspection::Takedown < ApplicationRecord
 
   def create_climbs
     self.ropes.each do |rope|
-      self.climbs.create(rope: rope)
+      self.climbs.new(rope: rope)
     end
   end
 

@@ -12,9 +12,9 @@ module Mutations
       @params = args[:data].to_h
       
       if @params["id"]
-        @inspection = PeriodicInspection.find(@params["id"])
+        @inspection = PreuseInspection.find(@params["id"])
       else
-        @inspection = PeriodicInspection.new(element_id: @params["element_id"])
+        @inspection = PreuseInspection.new(element_id: @params["element_id"])
       end
       save_and_return
     end
@@ -22,19 +22,25 @@ module Mutations
     private
 
     def save_and_return
+      check_authentication!
+      
       remove_empty_comments
       current_user = context[:current_user]
 
-      # TODO there has to be a better way to deal with :after_initialize and it's relics
-      if @inspection.id == nil
-        @inspection.sections = []
+      # assign attributes - needed to do this weird nesting thing since AR couldn't find
+      # the nested sections in the setup and takedown if they already existed
+      @inspection.assign_attributes(@params)
+
+      # add current user to setup and takedown's "updated by"
+      if @inspection.setup.changed_for_autosave?
+        @inspection.setup.users << current_user unless @inspection.setup.users.include?(current_user)
+      end
+      if @inspection.takedown.changed_for_autosave?
+        @inspection.takedown.users << current_user unless @inspection.takedown.users.include?(current_user)
       end
       
-      # if the inspection will change when saved,
-      # add the current user to be referenced by 'edited by'
-      @inspection.assign_attributes(@params)
+      # save and create takedown or return errors
       if @inspection.changed_for_autosave?
-        @inspection.users << current_user unless @inspection.users.include?(current_user)
         if @inspection.save
           return {
             status: 200,
@@ -54,7 +60,18 @@ module Mutations
     end
     
     def remove_empty_comments
-      @params["sections_attributes"].each do |section|
+      @params["setup_attributes"]["sections_attributes"].each do |section|
+        section["comments_attributes"].delete_if do |comment|
+          comment["content"] == ""
+        end
+        section["comments_attributes"].each do |comment|
+          if comment[:user_id] == nil
+            comment[:user_id] = context[:current_user].id
+          end
+        end
+      end
+
+      @params["takedown_attributes"]["sections_attributes"].each do |section|
         section["comments_attributes"].delete_if do |comment|
           comment["content"] == ""
         end

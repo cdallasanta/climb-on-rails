@@ -8,19 +8,19 @@ class Takedown extends Component {
         instructions={this.props.instructions.elementInstructions}
         data={this.props.data.sectionsAttributes.find(s => s.title === "Element")}
         handleChange={this.props.handleChange}
-        newComment={this.props.newComments.element.content}
+        newComment={this.props.newComments.Element.content}
         inspection="takedown" />
       <Section {...this.props}
         instructions={this.props.instructions.equipmentInstructions}
         data={this.props.data.sectionsAttributes.find(s => s.title === "Equipment")}
         handleChange={this.props.handleChange}
-        newComment={this.props.newComments.equipment.content}
+        newComment={this.props.newComments.Equipment.content}
         inspection="takedown" />
       <Section {...this.props}
         instructions={this.props.instructions.environmentInstructions}
         data={this.props.data.sectionsAttributes.find(s => s.title === "Environment")}
         handleChange={this.props.handleChange}
-        newComment={this.props.newComments.environment.content}
+        newComment={this.props.newComments.Environment.content}
         inspection="takedown" />
     </>
   }

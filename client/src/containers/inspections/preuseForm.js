@@ -15,14 +15,14 @@ class PreuseForm extends Component {
     elementId: parseInt(this.props.match.params.element_id),
     newComments: {
       setup:{
-        equipment: {content: ""},
-        element: {content: ""},
-        environment: {content: ""}
+        Equipment: {content: ""},
+        Element: {content: ""},
+        Environment: {content: ""}
       },
       takedown:{
-        equipment: {content: ""},
-        element: {content: ""},
-        environment: {content: ""}
+        Equipment: {content: ""},
+        Element: {content: ""},
+        Environment: {content: ""}
       }
     },
     alertMessage: {},
@@ -33,14 +33,14 @@ class PreuseForm extends Component {
     this.setState({
       newComments: {
         setup:{
-          equipment: {content: ""},
-          element: {content: ""},
-          environment: {content: ""}
+          Equipment: {content: ""},
+          Element: {content: ""},
+          Environment: {content: ""}
         },
         takedown:{
-          equipment: {content: ""},
-          element: {content: ""},
-          environment: {content: ""}
+          Equipment: {content: ""},
+          Element: {content: ""},
+          Environment: {content: ""}
         }
       }
     });
@@ -77,7 +77,7 @@ class PreuseForm extends Component {
       //chaning checkbox
       const {name, checked} = event.target;
       const inspection = event.target.getAttribute("inspection");
-  
+      
       this.setState(state => {
         const newAttrs = state[`${inspection}Attributes`];
         newAttrs.sectionsAttributes.find(s => s.title === name).complete = checked;
@@ -110,12 +110,25 @@ class PreuseForm extends Component {
   gatherDataFromState = () => {
     const date = this.state.date
     const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    const setupAttributes = {
+      sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes))
+    };
+    const takedownAttributes = {
+      sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes)),
+      climbsAttributes: []
+    }; // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
+
+    this.state.takedownAttributes.ropesAttributes.forEach(rope => {
+      takedownAttributes.climbsAttributes.push(rope.climbsAttributes[0]);
+    })
+
     const data = {
       id: this.state.id,
+      date: formattedDate,
       elementId: this.state.elementId,
-      setup_attributes: JSON.parse(JSON.stringify(this.state.setupAttributes)),
-      takedown_attributes: JSON.parse(JSON.stringify(this.state.takedownAttributes))
-    } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
+      setupAttributes: setupAttributes,
+      takedownAttributes: takedownAttributes
+    };
 
     for(const insp in this.state.newComments){
       for(const sectionTitle in this.state.newComments[insp]){
@@ -165,10 +178,10 @@ class PreuseForm extends Component {
   }
 
   renderAlert = () => {
-    const alert = this.state.alertMessage;
-    if (Object.keys(alert).length > 0) {
+    const alerts = this.state.alertMessage;
+    if (Object.keys(alerts).length > 0) {
       return (
-        <div className={`alert alert-${alert.type}`}>
+        <div className={`alert alert-${alerts.type}`}>
         <ul>
             {alerts.message.map((msg, i) => <li key={i}>{msg}</li>)}
           </ul>
@@ -180,7 +193,10 @@ class PreuseForm extends Component {
   queryCompleted = resp => {
     if (resp.preuseInspection.id !== null){
       this.props.history.push(`/preuse_inspections/elements/${resp.id}/edit`);
-      this.setState({alertMessage: {type:"info", message:"Previous inspection loaded", changed: false}});
+      this.setState({alertMessage: {
+        type:"info",
+        message:["Previous inspection loaded"],
+        changed: false}});
     } else {
       this.props.history.push(`/preuse_inspections/elements/${resp.id}/new`);
       this.setState({alertMessage: {}, changed: false});
@@ -213,7 +229,7 @@ class PreuseForm extends Component {
       <Query
         query={getPreuseInspectionQuery}
         variables={{
-          elemId: this.state.id,
+          elementId: this.state.elementId,
           date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
         }}
         fetchPolicy="network-only"

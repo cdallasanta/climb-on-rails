@@ -11,6 +11,7 @@ query($elementId: Int!, $date: String!) {
     takedownEquipmentInstructions
     takedownEnvironmentInstructions
     preuseInspection(date:$date) {
+      id
       setupAttributes: setup{
         users {
           fullname
@@ -37,11 +38,12 @@ query($elementId: Int!, $date: String!) {
           id
           identifier
           climbsAttributes: climbs {
-              id
-              block1
-              block2
-              block3
-              block4
+            id
+            ropeId
+            block1
+            block2
+            block3
+            block4
           }
         }
         sectionsAttributes: sections{
@@ -124,6 +126,7 @@ mutation($data: PreuseInput!) {
     status
     errors
     preuseInspection {
+      id
       setupAttributes: setup{
         users {
           fullname
