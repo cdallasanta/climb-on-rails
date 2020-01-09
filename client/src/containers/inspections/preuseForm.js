@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
 import '../../stylesheets/preuse_inspections.scss';
 import '../../stylesheets/inspection_forms.scss';
-import axios from 'axios';
 import Setup from '../../components/inspections/setup';
 import Takedown from '../../components/inspections/takedown';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Query } from 'react-apollo';
-import { getPreuseInspectionQuery } from '../../queries/inspections';
+import { Query, graphql } from 'react-apollo';
+import { getPreuseInspectionQuery, savePreuseMutation } from '../../queries/inspections';
 
 class PreuseForm extends Component {
   state = {
     date: new Date(),
     instructions: {},
-    id: parseInt(this.props.match.params.element_id),
+    elementId: parseInt(this.props.match.params.element_id),
     newComments: {
       setup:{
         equipment: {content: ""},
@@ -109,62 +108,60 @@ class PreuseForm extends Component {
   }
 
   gatherDataFromState = () => {
+    const date = this.state.date
+    const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
     const data = {
       id: this.state.id,
-      date: this.state.date,
-      setup_attributes: this.state.setup_attributes,
-      takedown_attributes: this.state.takedown_attributes,
-      current_user: this.props.currentUser
-    }
+      elementId: this.state.elementId,
+      setup_attributes: JSON.parse(JSON.stringify(this.state.setupAttributes)),
+      takedown_attributes: JSON.parse(JSON.stringify(this.state.takedownAttributes))
+    } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
 
     for(const insp in this.state.newComments){
-      for(const section_title in this.state.newComments[insp]){
-        if (data[`${insp}_attributes`]){
-          const section = data[`${insp}_attributes`].sections_attributes.find(s => s.title === section_title);
+      for(const sectionTitle in this.state.newComments[insp]){
+        if (data[`${insp}Attributes`]){
+          const section = data[`${insp}Attributes`].sectionsAttributes.find(s => s.title === sectionTitle);
 
-          section.comments_attributes.push({
+          section.commentsAttributes.push({
             id: null,
-            content: this.state.newComments[insp][section_title].content,
-            user_id: data.current_user.id
+            content: this.state.newComments[insp][sectionTitle].content
           })
         }
       }
     }
+    debugger;
 
     return data;
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    const elemId = this.state.element.id;
     const data = this.gatherDataFromState();
 
-    if (this.state.id){
-      const url = `/api/v1/elements/${elemId}/preuse_inspections/${this.state.id}`;
-      axios.patch(url,{preuse_inspection: data, user_id: this.props.currentUser.id})
-        .then(resp => {
-          if(resp.status === 200){
-            this.setState(resp.data);
-            this.resetTextboxes();
-            this.setState({alertMessage: [{type:"success", message:"Inspection successfully updated"}]});
-          } else {
-            this.handleErrors(resp.errors);
+    this.props.savePreuseMutation({
+      variables: {data: data}
+    }).then(({data: {savePreuse: {status, errors, preuseInspection}}}) => {
+      if (status === "200"){
+        this.props.history.push(`/preuse_inspections/elements/${this.state.elementId}/edit`);
+        this.setState({
+          id: preuseInspection.id,
+          users: preuseInspection.users,
+          sectionsAttributes: preuseInspection.sectionsAttributes,
+          alertMessage: {
+            type: "success",
+            message: ["Inspection successfully saved"]
+          },
+          changed: false
+        }, () => this.resetTextboxes());
+      } else {
+        this.setState({
+          alertMessage: {
+            type: "",
+            message: errors
           }
         })
-    } else {
-      const url = `/api/v1/elements/${elemId}/preuse_inspections/`;
-      axios.post(url,{preuse_inspection: data, user_id: this.props.currentUser.id})
-        .then(resp => {
-          if(resp.status === 200){
-            this.setState(resp.data);
-            this.resetTextboxes();
-            this.setState({alertMessage: [{type:"success", message:"Inspection successfully logged"}]});
-            this.props.history.push(`/preuse_inspections/elements/${elemId}/edit`);
-          } else {
-            this.handleErrors(resp.errors);
-          }
-        })
-    }
+      }
+    })
   }
 
   renderAlert = () => {
@@ -172,8 +169,8 @@ class PreuseForm extends Component {
     if (Object.keys(alert).length > 0) {
       return (
         <div className={`alert alert-${alert.type}`}>
-          <ul>
-            <li>{alert.message}</li>
+        <ul>
+            {alerts.message.map((msg, i) => <li key={i}>{msg}</li>)}
           </ul>
         </div>
       )
@@ -190,7 +187,7 @@ class PreuseForm extends Component {
     }
     this.resetTextboxes();
     this.updateStateFromQuery(resp);
-  } //TODO put changed state in resetTextboxes
+  }
 
   updateStateFromQuery = data => {
     this.setState({
@@ -261,4 +258,6 @@ class PreuseForm extends Component {
   }
 }
 
-export default PreuseForm;
+export default graphql(savePreuseMutation, {
+  name: "savePreuseMutation"
+})(PreuseForm);

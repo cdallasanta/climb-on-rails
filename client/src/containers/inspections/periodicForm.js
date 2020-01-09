@@ -4,7 +4,7 @@ import '../../stylesheets/inspection_forms.scss';
 import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Query, graphql, useMutation } from 'react-apollo';
+import { Query, graphql } from 'react-apollo';
 import { getPeriodicInspectionQuery, savePeriodicMutation } from '../../queries/inspections';
 
 class PeriodicForm extends Component {
@@ -99,7 +99,7 @@ class PeriodicForm extends Component {
     return data;
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
@@ -126,7 +126,7 @@ class PeriodicForm extends Component {
           }
         })
       }
-    })
+    });
   }
 
   renderAlert = () => {
@@ -208,13 +208,13 @@ class PeriodicForm extends Component {
         onCompleted={(data)=> this.queryCompleted(data.element)}
         onError={(error) => console.log(error)}>
 
-        {({loading, refetch}) => {
+        {({loading}) => {
           if (loading) return null;
           return <>
             {this.renderAlert()}
 
             <div id="periodic-inspection-form">
-            <form onSubmit={(e) => this.handleSubmit(e, refetch)} >
+            <form onSubmit={this.handleSubmit} >
               <div className="form-group">
                 <label htmlFor="date">Date</label>
                 <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />

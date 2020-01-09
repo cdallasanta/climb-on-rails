@@ -118,4 +118,31 @@ mutation($data: PeriodicInput!) {
 }
 `
 
-export { getPreuseInspectionQuery, getPeriodicInspectionQuery, savePeriodicMutation }
+const savePreuseMutation = gql`
+mutation($data: PeriodicInput!) {
+  savePeriodic(data: $data){
+    status
+    errors
+    periodicInspection{
+      id
+      users {
+        fullname
+      }
+      sectionsAttributes: sections{
+        id
+        title
+        complete
+        commentsAttributes: comments {
+          id
+          content
+          user {
+            fullname
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+export { getPreuseInspectionQuery, getPeriodicInspectionQuery, savePeriodicMutation, savePreuseMutation }
