@@ -16,7 +16,6 @@ module Api::V1
     end
 
     def create
-      binding.pry
       @insp = PreuseInspection.new(element_id: params[:element_id])
 
       return save_and_return
