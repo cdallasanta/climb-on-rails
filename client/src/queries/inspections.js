@@ -119,24 +119,54 @@ mutation($data: PeriodicInput!) {
 `
 
 const savePreuseMutation = gql`
-mutation($data: PeriodicInput!) {
-  savePeriodic(data: $data){
+mutation($data: PreuseInput!) {
+  savePreuse(data: $data){
     status
     errors
-    periodicInspection{
-      id
-      users {
-        fullname
-      }
-      sectionsAttributes: sections{
-        id
-        title
-        complete
-        commentsAttributes: comments {
+    preuseInspection {
+      setupAttributes: setup{
+        users {
+          fullname
+        }
+        isComplete
+        sectionsAttributes: sections{
           id
-          content
-          user {
-            fullname
+          title
+          complete
+          commentsAttributes: comments {
+            id
+            content
+            user {
+              fullname
+            }
+          }
+        }
+      }
+      takedownAttributes: takedown{
+        users {
+          fullname
+        }
+        ropesAttributes: ropes {
+          id
+          identifier
+          climbsAttributes: climbs {
+              id
+              block1
+              block2
+              block3
+              block4
+          }
+        }
+        sectionsAttributes: sections{
+          id
+          title
+          complete
+          commentsAttributes: comments {
+            id
+            content
+            user {
+              fullname
+            }
           }
         }
       }
