@@ -9,12 +9,6 @@ class PreuseInspection < ApplicationRecord
   validates :date, presence: true, uniqueness: {scope: :element}
   validates_presence_of :element
 
-#  TODO, test if these are used
-
-  def self.find_or_init_past_inspection(args)
-    self.find_or_initialize_by(args)
-  end
-
   def create_setup
     self.setup ||= PreuseInspection::Setup.new
   end

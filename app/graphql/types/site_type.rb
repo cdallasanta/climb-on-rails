@@ -8,7 +8,6 @@ module Types
       argument :date, String, required: false
     end
 
-    # TODO clean this up
     def status(**args)
       args[:date] ? date = args[:date] : date = Date.today
       elementsStatus = []
