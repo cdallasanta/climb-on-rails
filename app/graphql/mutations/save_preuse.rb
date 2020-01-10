@@ -21,7 +21,7 @@ module Mutations
     private
 
     def save_and_return
-      remove_empty_comments
+      clean_up_params
       current_user = context[:current_user]
 
       # TODO there has to be a better way to deal with :after_initialize and it's relics
@@ -29,21 +29,9 @@ module Mutations
         @inspection.setup.sections = []
         @params = @params.except("takedown_attributes")
       end
-p "~~~~~~~~~~~~~~~"
-p "Inspection:"
-p @inspection
-p ""
-p "~~~~~~~~~~~~~~~"
-p "Params:"
-p @params
-p ""
-p "~~~~~~~~~~~~~~~"
-
-p "Assigning attributes"
-binding.pry
+      
       @inspection.assign_attributes(@params)
       
-p "~~~~~~~~~~~~~~~"
       # save and create takedown or return errors
       if @inspection.changed_for_autosave?
         # add current user to setup and takedown's "updated by"
@@ -54,8 +42,6 @@ p "~~~~~~~~~~~~~~~"
           @inspection.takedown.users << current_user unless @inspection.takedown.users.include?(current_user)
         end
 
-        p "~~~~~~~~~~~~~~~"
-        p "Saving:"
         if @inspection.save
           if @inspection.setup.is_complete? && @inspection.takedown == nil
             @inspection.takedown = PreuseInspection::Takedown.create(preuse_inspection: @inspection)
@@ -81,6 +67,12 @@ p "~~~~~~~~~~~~~~~"
         }
       end
     end
+
+    def clean_up_params
+      remove_empty_comments
+      @params = @params.except("takedown_attributes") if @params["takedown_attributes"] == nil
+    end
+
     
     def remove_empty_comments
       @params["setup_attributes"]["sections_attributes"].each do |section|

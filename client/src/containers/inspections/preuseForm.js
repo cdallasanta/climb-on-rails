@@ -163,7 +163,6 @@ console.log(data);
     this.props.savePreuseMutation({
       variables: {data: data}
     }).then(({data: {savePreuse: {status, errors, preuseInspection}}}) => {
-      debugger;
       if (status === "200"){
         this.props.history.push(`/preuse_inspections/elements/${this.state.elementId}/edit`);
         this.setState({
