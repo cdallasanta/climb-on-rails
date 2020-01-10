@@ -16,9 +16,6 @@ gem 'puma', '~> 4.3'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-# Serializer to serve pretty json's from api
-gem 'active_model_serializers'
-
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
