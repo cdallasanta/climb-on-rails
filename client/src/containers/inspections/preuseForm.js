@@ -112,6 +112,13 @@ class PreuseForm extends Component {
       id: this.state.setupAttributes.id,
       sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes))
     };
+
+    //clean up unneeded user data from comments
+    setupAttributes.sectionsAttributes.forEach(section => {
+      section.commentsAttributes.forEach(comment => {
+        delete comment.user
+      })
+    })
     
     let takedownAttributes = null;
     if (this.state.takedownAttributes){
@@ -126,6 +133,13 @@ class PreuseForm extends Component {
         sectionsAttributes: JSON.parse(JSON.stringify(this.state.takedownAttributes.sectionsAttributes)),
         climbsAttributes: climbsReduced
       } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
+      
+      //clean up unneeded user data from comments
+      takedownAttributes.sectionsAttributes.forEach(section => {
+        section.commentsAttributes.forEach(comment => {
+          delete comment.user
+        })
+      })
     }
     
     const data = {
@@ -151,7 +165,7 @@ class PreuseForm extends Component {
         }
       }
     }
-    
+
     return data;
   }
 
