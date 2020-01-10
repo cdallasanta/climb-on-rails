@@ -151,7 +151,8 @@ class PreuseForm extends Component {
         }
       }
     }
-
+    // TODO be sure to remove this
+console.log(data);
     return data;
   }
 

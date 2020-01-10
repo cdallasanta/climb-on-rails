@@ -22,12 +22,4 @@ class Element < ApplicationRecord
     self.periodic_environment_instructions ||= "Trees appear healthy, no loose or overhanging branches\r\nTrail in good condition"
     self.save
   end
-
-  def find_or_create_todays_inspection
-    self.preuse_inspections.find_or_create_by(date:Date.today.strftime("%Y-%m-%d").to_s)
-  end
-
-  def find_past_inspection(date)
-    self.preuse_inspections.find(date: Date.strptime(date, "%Y-%m-%d")).first
-  end
 end

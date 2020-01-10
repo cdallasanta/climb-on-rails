@@ -21,7 +21,7 @@ module Mutations
     private
 
     def save_and_return
-      remove_empty_comments
+      clean_up_params
       current_user = context[:current_user]
 
       # TODO there has to be a better way to deal with :after_initialize and it's relics
@@ -67,6 +67,12 @@ module Mutations
         }
       end
     end
+
+    def clean_up_params
+      remove_empty_comments
+      @params = @params.except("takedown_attributes") if @params["takedown_attributes"] == nil
+    end
+
     
     def remove_empty_comments
       @params["setup_attributes"]["sections_attributes"].each do |section|
