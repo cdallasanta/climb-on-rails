@@ -10,4 +10,8 @@ RSpec.describe PreuseInspection::Setup, type: :model do
   it "belongs to a PreuseInspection" do
     expect(subject.preuse_inspection).to be_a PreuseInspection
   end
+
+  it "has a method #status" do
+    expect(subject).to respond_to(:status)
+  end
 end
