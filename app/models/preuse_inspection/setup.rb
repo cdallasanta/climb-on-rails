@@ -24,7 +24,7 @@ class PreuseInspection::Setup < ApplicationRecord
   def status
     if is_complete?
       return "complete"
-    elsif self.sections.all?{|s| s.complete == false}
+    elsif self.sections.all?{|s| s.complete == false} && self.id == nil
       return "not started"
     else
       return "incomplete"
