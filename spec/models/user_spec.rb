@@ -22,7 +22,14 @@ RSpec.describe User, type: :model do
     expect(no_password.valid?).to be false
   end
 
-  it "should be connected to a site" do
+  it "can be connected to a site" do
     expect(good_user.site).to be_a Site
+  end
+
+  it "can have many comments" do
+    good_user.comments.build(content:"test comment 1")
+    good_user.comments.build(content:"test comment 2")
+    good_user.comments.build(content:"test comment 3")
+    expect(good_user.comments.length).to eq 3
   end
 end
