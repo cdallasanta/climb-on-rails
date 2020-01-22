@@ -43,13 +43,6 @@ module Mutations
         end
 
         if @inspection.save
-          if @inspection.setup.is_complete? && @inspection.takedown == nil
-            @inspection.takedown = PreuseInspection::Takedown.create(preuse_inspection: @inspection)
-            @inspection.element.ropes.each do |rope|
-              @inspection.takedown.climbs.new(rope:rope)
-            end
-            @inspection.takedown.save
-          end
           return {
             status: 200,
             preuse_inspection: @inspection

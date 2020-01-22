@@ -7,8 +7,13 @@ RSpec.describe PreuseInspection, type: :model do
     expect(subject.setup).to be_a PreuseInspection::Setup
   end
 
-  it "has a Takedown" do
-    expect(subject.takedown).to be_a PreuseInspection::Takedown
+  it "has a Takedown once the setup is completed" do
+    insp = PreuseInspection.create(element:Element.create, date:Date.today)
+    insp.setup.sections.each do |section|
+      section.update(complete:true)
+    end
+    insp.save
+    expect(insp.takedown).to be_a PreuseInspection::Takedown
   end
 
   it "belongs to an element" do

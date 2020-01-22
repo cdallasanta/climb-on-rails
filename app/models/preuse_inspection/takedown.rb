@@ -7,22 +7,15 @@ class PreuseInspection::Takedown < ApplicationRecord
   has_many :ropes, through: :climbs, class_name: "Element::Rope"
   has_many :sections, as: :inspection
   accepts_nested_attributes_for :sections
-  accepts_nested_attributes_for :ropes
   accepts_nested_attributes_for :climbs
 
-  after_initialize :create_sections_and_climbs
+  after_initialize :create_sections
   
-  def create_sections_and_climbs
+  def create_sections
     if self.sections.length != 3
       self.sections.new(title: "Element")
       self.sections.new(title: "Equipment")
       self.sections.new(title: "Environment")
-    end
-
-    if self.climbs == []
-      self.ropes.each do |rope|
-        self.climbs.create(rope:rope)
-      end
     end
   end
 
