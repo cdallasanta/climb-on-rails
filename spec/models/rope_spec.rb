@@ -28,4 +28,13 @@ RSpec.describe Element::Rope, type: :model do
     subject.climbs.build(block_1:1, block_2:2, block_3:3, block_4:4)
     expect(subject.climb_count).to eq (30)
   end
+
+  it "has an attribute 'retired'" do
+    expect(subject.attributes).to include("retired") 
+  end
+
+  it "defaults to not being retired on creation" do
+    rope = Element::Rope.new
+    expect(rope.retired).to be false
+  end
 end

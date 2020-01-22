@@ -8,7 +8,7 @@ class Element::Rope < ApplicationRecord
   validates :identifier, presence: true, uniqueness: {scope: :element}
   validates_presence_of :element
 
-  after_create :not_retired
+  after_initialize :not_retired
 
   def not_retired
     self.retired ||= false

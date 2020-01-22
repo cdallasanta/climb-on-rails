@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Site, type: :model do
   subject{ Site.new(name:"test site")}
 
-  it "should have a name" do
-    expect(subject.name).not_to be_nil
+  it "must have a name" do
+    expect(Site.new).not_to be_valid
   end
 
   it "should be able to have many elements" do
