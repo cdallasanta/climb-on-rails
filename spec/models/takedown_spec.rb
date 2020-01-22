@@ -15,6 +15,13 @@ RSpec.describe PreuseInspection::Takedown, type: :model do
     @takedown = preuse.takedown
   end
 
+  after(:all) do
+    Element.destroy_all
+    Element::Rope.destroy_all
+    PreuseInspection.destroy_all
+    PreuseInspection::Takedown.destroy_all
+  end
+
   it "is initialized with three Sections" do
     expect(@takedown.sections.length).to eq 3
   end

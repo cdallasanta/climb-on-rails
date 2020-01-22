@@ -5,6 +5,10 @@ RSpec.describe User, type: :model do
     Site.create(name:"test site")
   end
 
+  after(:all) do
+    Site.destroy_all
+  end
+
   let(:good_user) {User.create(fullname: "test user", email:"test@email.com", site_id:Site.all.last.id, password:"demopass")}
   
   it "can be created with a username, email, password, and site" do

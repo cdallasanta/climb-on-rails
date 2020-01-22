@@ -27,6 +27,7 @@ class App extends Component {
       userToken: "",
       loggedIn: false
     });
+    // TODO send mutation to server to sign out
     localStorage.removeItem(AUTH_TOKEN);
     this.props.history.push('/');
   }
