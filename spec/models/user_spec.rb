@@ -9,14 +9,14 @@ RSpec.describe User, type: :model do
     Site.destroy_all
   end
 
-  let(:good_user) {User.new(fullname: "test user", email:"test@email.com", site_id:Site.all.last.id, password:"demopass")}
+  let(:good_user) {User.create(fullname: "test user", email:"test@email.com", site_id:Site.all.last.id, password:"demopass")}
   
   it "can be created with a username, email, password, and site" do
     expect(good_user.fullname).to eq("test user")
   end
 
   it "must have a valid and unique email address" do
-    duplicate_email_user = User.new(email: good_user.email, password:"demopass", site:Site.new)
+    duplicate_email_user = User.new(email: good_user.email)
     expect(duplicate_email_user.valid?).to be false
   end
 

@@ -1,6 +1,5 @@
 class User < ApplicationRecord
   has_secure_password
-  validates :email, uniqueness: true
 
   belongs_to :site
   has_many :user_periodic_inspections, class_name: "JoinTable::UserPeriodicInspections"
