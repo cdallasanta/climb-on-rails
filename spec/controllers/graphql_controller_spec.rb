@@ -9,7 +9,7 @@ RSpec.describe GraphqlController, type: :controller do
       expect(session["token"]).not_to be_nil
     end
 
-    it "sets #current_user on the controller" do
+    it "allows the controller to call #current_user" do
       post 'execute', params:{query:signInMutation(user.email, user.password)}
       expect(controller.send(:current_user)).to eq user
     end
@@ -18,7 +18,15 @@ RSpec.describe GraphqlController, type: :controller do
       post 'execute', params:{query:signInMutation("bad email", user.password)}
       expect(session["token"]).to be_nil
     end
+  end
 
+  context "Sign Out mutation" do
+    before(:each) {post 'execute', params:{query:signInMutation(user.email, user.password)}}
+
+    it "signs the user out" do
+      post 'execute', params:{query:signOutMutation}
+      expect(session["token"]).to be_nil
+    end
   end
 
   def signInMutation(email, password)
@@ -30,6 +38,17 @@ RSpec.describe GraphqlController, type: :controller do
             fullname
             id
           }
+        }
+      }
+    GQL
+  end
+
+  def signOutMutation
+    <<-GQL
+      mutation{
+        signOutUser{
+          status
+          loggedOut
         }
       }
     GQL
