@@ -58,8 +58,9 @@ RSpec.describe PreuseInspection::Takedown, type: :model do
       expect(insp.status).to eq("not started")
     end
 
-    it "returns 'incomplete' all sections are incomplete, but the setup has been saved to the database" do
+    it "returns 'incomplete' when all sections are incomplete, a user has edited it" do
       insp = PreuseInspection::Takedown.create(preuse_inspection: PreuseInspection.create)
+      insp.users << User.new(site:Site.all.last, password:"demopass")
       expect(insp.status).to eq("incomplete")
     end
   end

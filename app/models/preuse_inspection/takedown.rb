@@ -23,7 +23,7 @@ class PreuseInspection::Takedown < ApplicationRecord
     if !self.sections.any?{|s| s.complete == false}
       return "complete"
     elsif self.sections.all?{|s| s.complete == false} &&
-        self.climbs.all?{|c| c.all_blocks_empty?} && self.id == nil
+        self.climbs.all?{|c| c.all_blocks_empty?} && self.users == []
       return "not started"
     else
       return "incomplete"
