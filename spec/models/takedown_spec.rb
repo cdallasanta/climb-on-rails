@@ -1,37 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe PreuseInspection::Takedown, type: :model do
-  before(:all) do
-    @element = Element.create(name:"test element", site:Site.create(name:"test site"))
-    rope1 = @element.ropes.create(element:@element, identifier:"test rope 1")
-    rope2 = @element.ropes.create(element:@element, identifier:"test rope 2")
-    rope3 = @element.ropes.create(element:@element, identifier:"test rope 3")
-    preuse = PreuseInspection.new(element:@element, date:Date.today)
+  setup_vars
+  let(:good_takedown) do
+    preuse = PreuseInspection.new(element:good_element, date:Date.today)
     preuse.setup.sections.each do |section|
       section.update(complete:true)
     end
     preuse.save  # this is when the takedown is created, in the before_save method
-
-    @takedown = preuse.takedown
-  end
-
-  after(:all) do
-    Element.destroy_all
-    Element::Rope.destroy_all
-    PreuseInspection.destroy_all
-    PreuseInspection::Takedown.destroy_all
+    
+    preuse.takedown
   end
 
   it "is initialized with three Sections" do
-    expect(@takedown.sections.length).to eq 3
+    expect(good_takedown.sections.length).to eq 3
   end
   
   it "belongs to a PreuseInspection" do
-    expect(@takedown.preuse_inspection).to be_a PreuseInspection
+    expect(good_takedown.preuse_inspection).to be_a PreuseInspection
   end
 
   it "has a climb for each rope climbs" do
-    expect(@takedown.climbs.length).to eq(@takedown.preuse_inspection.element.ropes.length)
+    expect(good_takedown.climbs.length).to eq(good_takedown.preuse_inspection.element.ropes.length)
   end
 
   it "has a method #status" do
