@@ -62,5 +62,10 @@ RSpec.describe Types::QueryType do
       
       expect(response["data"]["site"]["elements"]).to eq(site_elements)
     end
+    
+    it 'returns an error when the user is not signed in' do
+      response = ClimbOnSchema.execute(site_query).to_h
+      expect(response["errors"]).not_to be nil
+    end
   end
 end

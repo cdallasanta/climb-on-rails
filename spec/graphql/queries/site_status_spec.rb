@@ -27,6 +27,13 @@ RSpec.describe Types::QueryType do
         context: {current_user: good_user}
       ).to_h
     }
+    
+    it 'returns an error when the user is not signed in' do
+      response = ClimbOnSchema.execute(status_query,
+        variables: {date: Date.today.to_s}
+      ).to_h
+      expect(response["errors"]).not_to be nil
+    end
 
     it "returns a an array of element statuses" do
       expect(response["data"]["site"]["status"]).to be_a Array
