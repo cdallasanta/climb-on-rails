@@ -1,19 +1,12 @@
 require "rails_helper"
 
+RSpec.configure do |c|
+  c.extend CommonSetup 
+end
+
 RSpec.describe Types::QueryType do
   describe "Site Status query" do
-    before(:all) do
-      @site = Site.create(name:"test site")
-      @user = User.create(site:@site, fullname:"test user", email:"test@email.com", password:"demopass")
-      @element = @site.elements.build(name: "test element")
-      @element.ropes.build(identifier:"test rope")
-    end
-
-    after(:all) do
-      Site.destroy_all
-      Element.destroy_all
-      User.destroy_all
-    end
+    setup_vars
 
     let(:status_query) {
       %(query($date: String!) {
@@ -31,7 +24,7 @@ RSpec.describe Types::QueryType do
     subject(:response){
       ClimbOnSchema.execute(status_query,
         variables: {date: Date.today.to_s},
-        context: {current_user: @user}
+        context: {current_user: good_user}
       ).to_h
     }
 
@@ -45,13 +38,13 @@ RSpec.describe Types::QueryType do
     end
 
     it "returns 'incomplete'/'not started' with an incomplete Setup and uncreated Takedown" do
-      @element.preuse_inspections.create(date:Date.today)
+      good_element.preuse_inspections.create(date:Date.today)
       expect(response["data"]["site"]["status"][0]["setup"]).to eq "incomplete"
       expect(response["data"]["site"]["status"][0]["takedown"]).to eq "not started"
     end
 
     it "returns 'complete'/'not started' with a complete Setup and not started Takedown" do
-      insp = @element.preuse_inspections.create(date:Date.today)
+      insp = good_element.preuse_inspections.create(date:Date.today)
       insp.setup.sections.each do |section|
         section.update(complete: true)
       end
@@ -62,7 +55,7 @@ RSpec.describe Types::QueryType do
     end
     
     it "returns 'complete'/'incomplete' with a complete Setup and an incomplete Takedown" do
-      insp = @element.preuse_inspections.create(date:Date.today)
+      insp = good_element.preuse_inspections.create(date:Date.today)
       insp.setup.sections.each do |section|
         section.update(complete: true)
       end

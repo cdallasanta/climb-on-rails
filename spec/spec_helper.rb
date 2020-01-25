@@ -96,10 +96,10 @@ RSpec.configure do |config|
 
   module CommonSetup 
     def setup_vars
-      let(:good_site) { Site.create(name: "test site") }
+      let!(:good_site) { Site.create(name: "test site") }
       let!(:good_user) { User.create(fullname:"test user", email:"test@email.com", password:"demopass", site: good_site) }
-      let(:good_element){ good_site.elements.create(name: "test element") }
-      let(:good_rope){ good_element.ropes.create(identifier: "test rope") }
+      let!(:good_element){ good_site.elements.create(name: "test element") }
+      let!(:good_rope){ good_element.ropes.create(identifier: "test rope") }
     end
   end
 end
