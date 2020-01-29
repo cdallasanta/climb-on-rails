@@ -59,6 +59,13 @@ class Login extends Component {
     }).then(resp => this.handleSignIn(resp.data))
   }
 
+  useDemo = () => {
+    this.setState({
+      email:"demo@email.com",
+      password:"demopass"
+    })
+  }
+
   render() {
     const {email, password, remember} = this.state;
 
@@ -71,6 +78,14 @@ class Login extends Component {
           Climb On!</h1>
 
           <form id="login-form" onSubmit={this.handleSubmit}>
+            <div>
+              <input
+                type="button"
+                name="demoInfo"
+                onClick={this.useDemo}
+                value="Fill in Demo User's info" />
+            </div>
+            
             <input placeholder="email"
               type="email"
               name="email"
