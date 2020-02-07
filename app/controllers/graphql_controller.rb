@@ -5,6 +5,7 @@ class GraphqlController < ApplicationController
   # protect_from_forgery with: :null_session
 
   def execute
+    binding.pry
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]

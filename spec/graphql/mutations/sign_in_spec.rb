@@ -37,7 +37,7 @@ RSpec.describe Types::QueryType do
 
     it "returns nil on an unsuccessful sign in" do
       bad_result = ClimbOnSchema.execute(signInMutation, variables: {
-        email: "bas email",
+        email: "bad email",
         password: user.password
       },
       context:{
