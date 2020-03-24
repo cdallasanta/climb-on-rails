@@ -2,7 +2,7 @@ import React from 'react'
 
 type AlertProps = {
   messages: string[];
-  type: string;
+  type: "alert-success" | "alert-danger" | "alert-warning" | "alert-info";
 }
 
 const Alert = ({messages, type}: AlertProps) => {

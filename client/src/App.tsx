@@ -1,12 +1,12 @@
 import React from 'react';
 import './stylesheets/global.scss'
-import Alert from './components/alert'
+import Dashboard from './components/dashboard'
 
 
 function App() {
   return (
     <div className="App">
-      <Alert type="alert-success" messages={["test1", "test2"]}/>
+      <Dashboard />
     </div>
   );
 }
