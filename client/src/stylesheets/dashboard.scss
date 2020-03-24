@@ -1,0 +1,66 @@
+.statusIcon {
+  height: 20px;
+  width: 20px;
+}
+
+.last-updated {
+  color: white;
+}
+
+div.table {
+  width: 100%;
+  display: table;
+  border-radius: 5px;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  background-color: white;
+}
+
+div.table-head {
+  display: table-header-group;
+  background-color: gray;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+div.th, div.td {
+  display: table-cell;
+  text-align: justify;
+  border-bottom: 1px solid black;
+  text-align: center;
+  padding: 8px;
+}
+
+div.th {
+  color: #ffffff;
+  background: #4FC3A1;
+}
+
+div.td {
+  border-right: 1px solid #f8f8f8;
+  font-size: 12px;
+}
+
+div.table-body {
+  display: table-row-group;
+}
+
+div.table-row {
+  display: table-row;
+}
+
+.dashboard{
+  margin: 10px 70px 70px;
+}
+
+div.table .table-head .th:nth-child(odd) {
+  color: #ffffff;
+  background: #324960;
+}
+
+div.table .table-row:nth-child(even) {
+  background: lightgrey;
+}
