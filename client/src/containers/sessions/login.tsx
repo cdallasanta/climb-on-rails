@@ -29,14 +29,13 @@ class Login extends Component<Props, State> {
     this.state = {
       email: "",
       password: "",
-      errors: [""],
+      errors: [],
       remember: false
     };
   }
 
   handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
-    debugger;
     const value: boolean | string = target.type === 'checkbox' ? target.checked : target.value;
     this.setState((prevState: State) => ({
       ...prevState,
@@ -92,7 +91,7 @@ class Login extends Component<Props, State> {
 
     return(
       <div className="content" id="logged-out-content">
-        {this.state.errors ? this.handleErrors() : null}
+        {this.state.errors.length > 0 ? this.handleErrors() : null}
 
         <div id="login-form-div">
           <h1>Welcome to<br />
