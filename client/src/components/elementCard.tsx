@@ -8,7 +8,7 @@ interface Props extends RouteComponentProps {
   };
 }
 
-const ElementCard = ({data: {name, id}, location,}: Props) => {
+const ElementCard = ({data: {name, id}, location}: Props) => {
   return (
     <Link to={location.pathname + `/elements/${id}/new`} style={{textDecoration: 'none'}}>
       <div className="element-card">
