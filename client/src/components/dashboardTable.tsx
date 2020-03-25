@@ -31,7 +31,7 @@ const DashboardTable = ({date, setDate, lastUpdated}: Props) => {
 
   const formattedDate: string = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
   // TODO: come back to this typing
-  const {data} = useQuery(siteStatusQuery, {
+  const { data } = useQuery(siteStatusQuery, {
     variables: {date: formattedDate},
     pollInterval: 60000,
     fetchPolicy: "no-cache"
