@@ -56,15 +56,16 @@ class App extends Component<Props, State> {
     this.loginStatus();
   }
 
-  render(){
-    return (
-      <div className="App">
-        { this.state.loggedIn
-          ? <Dashboard />
-          : <Login   handleLogin={this.handleLogin} />
-        }
-      </div>
-    );
+  render() {
+    if (this.state.loggedIn) {
+      return (
+        <Home handleLogout={this.handleLogout} />
+      );
+    } else {
+      return (
+        <Login handleLogin={this.handleLogin} />
+      );
+    }
   }
 }
 
