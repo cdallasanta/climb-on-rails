@@ -30,7 +30,7 @@ const DashboardTable = ({date, setDate, lastUpdated}: Props) => {
   }
 
   const formattedDate: string = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-  // TODO: come back to this typing
+  // TODO: come back to this typing, and it keeps calling after being unmounted
   const { data } = useQuery(siteStatusQuery, {
     variables: {date: formattedDate},
     pollInterval: 60000,
