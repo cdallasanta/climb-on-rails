@@ -10,12 +10,14 @@ import {BrowserRouter as Router} from 'react-router-dom';
 
 const link = createHttpLink({
   uri: 'http://localhost:3001/graphql',
-  credentials: 'same-origin'
+  credentials: 'include'
 });
 
-export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link,
+const client = new ApolloClient({
+  cache: new InMemoryCache({
+    addTypename: false
+  }),
+  link: link
 });
 
 ReactDOM.render(

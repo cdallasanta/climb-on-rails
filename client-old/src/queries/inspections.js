@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost';
 
-const getPreuseInspectionQuery: string = gql`
+const getPreuseInspectionQuery = gql`
 query($elementId: Int!, $date: String!) {
   element(id:$elementId) {
     id
@@ -65,7 +65,7 @@ query($elementId: Int!, $date: String!) {
 }
 `
 
-const getPeriodicInspectionQuery: string = gql`
+const getPeriodicInspectionQuery = gql`
 query($elementId: Int!, $date: String!) {
   element(id:$elementId) {
     id
@@ -94,7 +94,7 @@ query($elementId: Int!, $date: String!) {
 }
 `
 
-const savePeriodicMutation: string = gql`
+const savePeriodicMutation= gql`
 mutation($data: PeriodicInput!) {
   savePeriodic(data: $data){
     status
@@ -121,7 +121,7 @@ mutation($data: PeriodicInput!) {
 }
 `
 
-const savePreuseMutation: string = gql`
+const savePreuseMutation= gql`
 mutation($data: PreuseInput!) {
   savePreuse(data: $data){
     status

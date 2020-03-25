@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import './stylesheets/global.scss'
-import Dashboard from './components/dashboard'
+import Home from './containers/home';
 import Login from './containers/sessions/login'
 import { History, LocationState } from "history";
-// import { AUTH_TOKEN } from './constants'
-const AUTH_TOKEN = "test_token"
+import { AUTH_TOKEN } from './constants'
 
 interface Props {
   history?: History<LocationState>;
@@ -28,7 +27,7 @@ class App extends Component<Props, State> {
 
     if(remember){
       localStorage.setItem(AUTH_TOKEN, token);
-    } // TODO fix constants and temp_token: AUTH_TOKEN
+    }
   }
 
   
@@ -47,7 +46,7 @@ class App extends Component<Props, State> {
       userToken: "",
       loggedIn: false
     });
-    // TODO send mutation to server to sign out
+    // TODO: send mutation to server to sign out
     localStorage.removeItem(AUTH_TOKEN);
     this.props.history?.push('/');
   }

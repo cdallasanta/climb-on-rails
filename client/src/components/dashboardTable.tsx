@@ -21,11 +21,11 @@ const DashboardTable = ({date, setDate, lastUpdated}: Props) => {
   const renderInspectionTable = (elements: Element[]) => {
     return elements.map((elem: Element, i: number) => {
       return <div className="table-row" key={i}>
-          <div className="td">{elem.name}</div>
-          <div className="td"><img src={require(`../images/${elem.setup}.png`)} className="statusIcon" alt={elem.setup} /></div>
-          <div className="td"><img src={require(`../images/${elem.takedown}.png`)} className="statusIcon" alt={elem.takedown} /></div>
-          <div className="td"><NavLink to={`/admin/elements/${elem.id}`}>View Element</NavLink></div>
-        </div>
+        <div className="td">{elem.name}</div>
+        <div className="td"><img src={require(`../images/${elem.setup}.png`)} className="statusIcon" alt={elem.setup} /></div>
+        <div className="td"><img src={require(`../images/${elem.takedown}.png`)} className="statusIcon" alt={elem.takedown} /></div>
+        <div className="td"><NavLink to={`/admin/elements/${elem.id}`}>View Element</NavLink></div>
+      </div>
     })
   }
 
@@ -36,7 +36,7 @@ const DashboardTable = ({date, setDate, lastUpdated}: Props) => {
     pollInterval: 60000,
     fetchPolicy: "no-cache"
   });
-  console.log(data);
+  
   return <div className="dashboard">
     <DatePicker selected={date} onChange={(date: Date) => setDate(date)} />
     <div className="table">

@@ -1,24 +1,30 @@
 import React, { Component } from 'react';
 import "../stylesheets/global.scss";
-import { Switch, Route, withRouter } from 'react-router-dom';
-import AdminContainer from './admin';
-import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
-import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+// ^ Switch, Route,
+// import AdminContainer from './admin';
+// import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
+// import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
 import Header from '../components/header';
 import * as images from '../images/index';
+import Dashboard from '../components/dashboard';
 
-class Home extends Component {
+interface Props extends RouteComponentProps {
+  handleLogout: () => void;
+}
+
+class Home extends Component<Props> {
   state = {
     backgroundImage: ""
   }
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps: Props){
     if (prevProps.location !== this.props.location){
-      this.assignBackgroundImage(this.props.location);
+      this.assignBackgroundImage(this.props.location.pathname);
     }
   }
 
-  assignBackgroundImage({pathname}){
+  assignBackgroundImage(pathname: string){
     switch (true){
       case pathname.includes("periodic_inspections") &&
           (pathname.endsWith('/new') || pathname.endsWith('/edit')):
@@ -43,7 +49,7 @@ class Home extends Component {
         <Header handleLogout={this.props.handleLogout} />
 
         <div id="body">
-          <Switch>
+          {/* <Switch>
             <Route path="/preuse_inspections"
               component={PreuseInspectionContainer}
             />
@@ -53,7 +59,8 @@ class Home extends Component {
             <Route path="/admin"
               component={AdminContainer}
             />
-          </Switch>
+          </Switch> */}
+          <Dashboard />
         </div>
       </div>
     );
