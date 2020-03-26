@@ -178,7 +178,9 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
-    
+    debugger;
+// invalid hook call when saving inspection
+
     const [saveInspection] = useMutation(savePeriodicMutation);
     saveInspection({
       variables: {data: data}
