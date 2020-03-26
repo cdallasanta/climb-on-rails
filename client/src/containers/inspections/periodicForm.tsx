@@ -55,7 +55,7 @@ interface NewSection {
   }[]
 }
 
-interface Response {
+interface QueryResponse {
   id: number;
   periodicInspection: {
     id: number,
@@ -65,6 +65,20 @@ interface Response {
   periodicEnvironmentInstructions: string;
   periodicElementInstructions: string;
   periodicEquipmentInstructions: string;
+}
+
+interface MutationResponse {
+  data: {
+    savePeriodic: {
+      status: string,
+      errors: string[],
+      periodicInspection: {
+        id: number,
+        users: User[],
+        sectionsAttributes: Section[]
+      }
+    }
+  }
 }
 
 interface MatchParams {
@@ -173,13 +187,13 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
     return data;
   }
 // TODO: figure out typing of the mutation
-  handleSubmit = (event: React.FormEvent<HTMLFormElement>, saveInspection) => {
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>, saveInspection: any) => {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
     saveInspection({
       variables: {data: data}
-    }).then(({data: {savePeriodic: {status, errors, periodicInspection}}}) => {
+    }).then(({data: {savePeriodic: {status, errors, periodicInspection}}}: MutationResponse) => {
       if (status === "200"){
         this.props.history.push(`/periodic_inspections/elements/${this.state.elementId}/edit`);
         this.setState({
@@ -244,7 +258,7 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
     }
   }
 
-  queryCompleted = (resp: Response) => {
+  queryCompleted = (resp: QueryResponse) => {
     if (resp.periodicInspection.id !== null){
       this.props.history.push(`/periodic_inspections/elements/${resp.id}/edit`);
       this.setState({
@@ -263,7 +277,7 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
     this.updateStateFromQuery(resp);
   }
 
-  updateStateFromQuery = (data: Response) => {
+  updateStateFromQuery = (data: QueryResponse) => {
     this.setState({
       id: data.periodicInspection.id,
       users: data.periodicInspection.users,
@@ -285,7 +299,7 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
           date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
         }}
         fetchPolicy="network-only"
-        onCompleted={(data: {element: Response})=> this.queryCompleted(data.element)}
+        onCompleted={(data: {element: QueryResponse})=> this.queryCompleted(data.element)}
         onError={(error: any) => console.log(error)}>
 
         {({loading}: {loading: boolean}) => {
@@ -295,7 +309,7 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
 
             <div id="periodic-inspection-form">
               <Mutation mutation={savePeriodicMutation}>
-                {(savePeriodic) => (
+                {(savePeriodic: any) => (
                 <form onSubmit={(e: React.FormEvent<HTMLFormElement>) =>this.handleSubmit(e, savePeriodic)} >
                   <div className="form-group">
                     <label htmlFor="date">Date</label>

@@ -6,6 +6,7 @@ class PreuseInspection < ApplicationRecord
   accepts_nested_attributes_for :takedown
 
   after_initialize :create_setup
+  # TODO what is this? v
   after_save :before_save
 
   validates :date, presence: true, uniqueness: {scope: :element}
@@ -17,9 +18,9 @@ class PreuseInspection < ApplicationRecord
 
   def before_save
     if self.setup.is_complete? && self.takedown == nil
-      self.takedown = PreuseInspection::Takedown.new
+      self.takedown = PreuseInspection::Takedown.create
       self.element.ropes.each do |rope|
-        self.takedown.climbs.new(rope:rope)
+        self.takedown.climbs.create(rope:rope)
       end
     end
   end

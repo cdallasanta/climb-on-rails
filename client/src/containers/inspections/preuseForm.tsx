@@ -43,7 +43,7 @@ interface State {
   changed: boolean
 }
 
-interface Response {
+interface QueryResponse {
   id: number,
   setupEquipmentInstructions: string,
   setupElementInstructions: string,
@@ -55,6 +55,20 @@ interface Response {
     id: number
     setupAttributes: SetupAttributes,
     takedownAttributes: TakedownAttributes
+  }
+}
+
+interface MutationResponse {
+  data: {
+    savePreuse: {
+      status: string,
+      errors: string[],
+      preuseInspection: {
+        id: number
+        setupAttributes: SetupAttributes,
+        takedownAttributes: TakedownAttributes
+      }
+    }
   }
 }
 
@@ -155,8 +169,8 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     if ((event.target.attributes as any).type.value === "number"){
       // changing climbs number from takedown
       const {name, value} = event.target;
-      const climbId = parseInt(event.target.getAttribute('climb-id'));
-
+      const climbId = parseInt(event.target.getAttribute('data-climbid'));
+      
       this.setState((state: State) => {
         const {takedownAttributes} = state;
         const climb = takedownAttributes.climbsAttributes.find((c: Climb) => c.id === climbId);
@@ -167,7 +181,7 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     } else if ((event.target.attributes as any).type.value === "textarea") {
       // changing comment
       const {name, value} = event.target;
-      const inspection = event.target.getAttribute("inspection");
+      const inspection = event.target.getAttribute("data-inspection");
 
       this.setState(state => {
         const newComments = state.newComments;
@@ -177,9 +191,9 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     } else if ((event.target.attributes as any).type.value === "checkbox") {
       //chaning checkbox
       const {name, checked} = event.target;
-      const inspection = event.target.getAttribute("inspection");
+      const inspection = event.target.getAttribute("data-inspection");
       
-      this.setState(state => {
+      this.setState((state: State) => {
         const newAttrs = state[`${inspection}Attributes`];
         newAttrs.sectionsAttributes.find(s => s.title === name).complete = checked;
         return Object.assign({}, state, {[`${inspection}Attributes`]: newAttrs})
@@ -272,14 +286,14 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
 
     return data;
   }
-
+// TODO: figure out the typing of the graphql mutation
   handleSubmit = (event: React.FormEvent<HTMLFormElement>, savePreuseMutation) => {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
     savePreuseMutation({
       variables: {data: data}
-    }).then(({data: {savePreuse: {status, errors, preuseInspection}}}) => {
+    }).then(({data: {savePreuse: {status, errors, preuseInspection}}}: MutationResponse) => {
       if (status === "200"){
         this.props.history.push(`/preuse_inspections/elements/${this.state.elementId}/edit`);
         this.setState({
@@ -314,7 +328,7 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     }
   }
 
-  queryCompleted = (resp: Response) => {
+  queryCompleted = (resp: QueryResponse) => {
     if (resp.preuseInspection.id !== null){
       this.props.history.push(`/preuse_inspections/elements/${resp.id}/edit`);
       this.setState({
@@ -332,7 +346,7 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     this.updateStateFromQuery(resp);
   }
 
-  updateStateFromQuery = (data: Response) => {
+  updateStateFromQuery = (data: QueryResponse) => {
     this.setState({
       id: data.preuseInspection.id,
       setupAttributes: data.preuseInspection.setupAttributes,
@@ -361,10 +375,10 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
           date: this.state.date.getDate() + "/" + (this.state.date.getMonth()+1) + "/" + this.state.date.getFullYear()
         }}
         fetchPolicy="network-only"
-        onCompleted={(data)=> this.queryCompleted(data.element)}
-        onError={(error) => console.log(error)}>
+        onCompleted={(data: {element: QueryResponse})=> this.queryCompleted(data.element)}
+        onError={(error: any) => console.log(error)}>
 
-        {({loading}) => {
+        {({loading}: {loading: boolean}) => {
           if (loading) return null;
           return <>
           {this.renderAlert()}

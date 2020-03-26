@@ -68,28 +68,28 @@ class Takedown extends Component<Props> {
               <input type="number"
               value={climb.block1 ? climb.block1 : ""}
               name="block1"
-              climb-id={climb.id}
+              data-climbid={climb.id}
               onChange={this.props.handleChange} />
             </td>
             <td>
               <input type="number"
               value={climb.block2 ? climb.block2 : ""}
               name="block2"
-              climb-id={climb.id}
+              data-climbid={climb.id}
               onChange={this.props.handleChange} />
             </td>
             <td>
               <input type="number"
               value={climb.block3 ? climb.block3 : ""}
               name="block3"
-              climb-id={climb.id}
+              data-climbid={climb.id}
               onChange={this.props.handleChange} />
             </td>
             <td>
               <input type="number"
               value={climb.block4 ? climb.block4 : ""}
               name="block4"
-              climb-id={climb.id}
+              data-climbid={climb.id}
               onChange={this.props.handleChange} />
             </td>
           </tr>
