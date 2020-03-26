@@ -115,9 +115,9 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
       });
     } else if ((event.target.attributes as any).type.value === "checkbox") {
       //changing checkbox
+      const {name, checked}: {name: string, checked: boolean} = event.target;
+
       this.setState((state: State) => {
-        const {name, checked}: {name: string, checked: boolean} = event.target;
-        
         const section: Section | undefined = state?.sectionsAttributes.find((s: Section) => s.title === name)
         if (section){
           section.complete = checked;

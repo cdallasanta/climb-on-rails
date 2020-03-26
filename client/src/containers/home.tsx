@@ -6,7 +6,6 @@ import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
 import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
 import Header from '../components/header';
 import * as images from '../images/index';
-import Dashboard from '../components/dashboard';
 
 interface Props extends RouteComponentProps {
   handleLogout: () => void;
@@ -59,7 +58,6 @@ class Home extends Component<Props> {
               component={AdminContainer}
             />
           </Switch>
-          <Dashboard />
         </div>
       </div>
     );
