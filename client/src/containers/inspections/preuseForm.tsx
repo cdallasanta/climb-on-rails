@@ -134,7 +134,7 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     takedownAttributes: undefined
   }
 
-  resetTextboxes = () => {
+  resetTextboxes = (): void => {
     this.setState({
       newComments: {
         setup:{
@@ -151,22 +151,20 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     });
   }
 
-  handleChange = event =>{
-    if (event.target.attributes.type.value === "number"){
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    if ((event.target.attributes as any).type.value === "number"){
       // changing climbs number from takedown
       const {name, value} = event.target;
       const climbId = parseInt(event.target.getAttribute('climb-id'));
 
       this.setState((state: State) => {
         const {takedownAttributes} = state;
-        const climb = takedownAttributes.climbsAttributes.find(r => r.id === climbId);
+        const climb = takedownAttributes.climbsAttributes.find((c: Climb) => c.id === climbId);
         climb[name] = parseInt(value);
-        return {
-          takedownAttributes
-        }
+        return {takedownAttributes}
       })
 
-    } else if (event.target.attributes.type.value === "textarea") {
+    } else if ((event.target.attributes as any).type.value === "textarea") {
       // changing comment
       const {name, value} = event.target;
       const inspection = event.target.getAttribute("inspection");
@@ -176,7 +174,7 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
         newComments[inspection][name].content = value;
         return Object.assign({}, state, {newComments: newComments})
       });
-    } else if (event.target.attributes.type.value === "checkbox") {
+    } else if ((event.target.attributes as any).type.value === "checkbox") {
       //chaning checkbox
       const {name, checked} = event.target;
       const inspection = event.target.getAttribute("inspection");
@@ -211,24 +209,25 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
   }
 
   gatherDataFromState = () => {
-    const date = this.state.date
-    const formattedDate = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-    const setupAttributes = {
+    const date: Date = this.state.date
+    const formattedDate: string = date.getDate()  + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+    const setupAttributes: SetupAttributes = {
       id: this.state.setupAttributes.id,
       sectionsAttributes: JSON.parse(JSON.stringify(this.state.setupAttributes.sectionsAttributes))
     };
 
     //clean up unneeded user data from comments
     setupAttributes.sectionsAttributes.forEach((section: Section) => {
-      section.commentsAttributes.forEach(comment => {
+      section.commentsAttributes.forEach((comment: {user: User, content: string}) => {
         delete comment.user
       })
     })
     
-    let takedownAttributes = null;
+    // TODO: this line below was let takedownAttributes = null. I might have broken something with this
+    let takedownAttributes: TakedownAttributes;
     if (this.state.takedownAttributes){
       const climbsCopy = JSON.parse(JSON.stringify(this.state.takedownAttributes.climbsAttributes));
-      const climbsReduced = climbsCopy.map(climb => {
+      const climbsReduced = climbsCopy.map((climb: Climb) => {
         delete climb["rope"];
         return climb;
       })
@@ -240,8 +239,8 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
       } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
       
       //clean up unneeded user data from comments
-      takedownAttributes.sectionsAttributes.forEach(section => {
-        section.commentsAttributes.forEach(comment => {
+      takedownAttributes.sectionsAttributes.forEach((section: Section) => {
+        section.commentsAttributes.forEach((comment: {user: User, content: string}) => {
           delete comment.user
         })
       })
@@ -261,7 +260,7 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
       }
       for(const sectionTitle in this.state.newComments[insp]){
         if (data[`${insp}Attributes`]){
-          const section = data[`${insp}Attributes`].sectionsAttributes.find(s => s.title === sectionTitle);
+          const section = data[`${insp}Attributes`].sectionsAttributes.find((s: Section) => s.title === sectionTitle);
 
           section.commentsAttributes.push({
             id: null,
