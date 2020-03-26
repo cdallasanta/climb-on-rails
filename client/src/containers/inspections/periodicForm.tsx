@@ -4,7 +4,8 @@ import '../../stylesheets/inspection_forms.scss';
 import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Query, graphql } from 'react-apollo';
+import { Query } from 'react-apollo';
+import { useMutation } from "@apollo/react-hooks";
 import { getPeriodicInspectionQuery, savePeriodicMutation } from '../../queries/inspections';
 import { RouteComponentProps } from 'react-router';
 
@@ -177,7 +178,9 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
-    this.props.savePeriodicMutation({
+    
+    const [saveInspection] = useMutation(savePeriodicMutation);
+    saveInspection({
       variables: {data: data}
     }).then(({data: {savePeriodic: {status, errors, periodicInspection}}}) => {
       if (status === "200"){
@@ -315,6 +318,4 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
   }
 }
 
-export default graphql(savePeriodicMutation, {
-  name: "savePeriodicMutation"
-})(PeriodicForm);
+export default PeriodicForm;
