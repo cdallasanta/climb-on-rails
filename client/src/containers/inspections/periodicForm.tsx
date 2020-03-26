@@ -4,8 +4,7 @@ import '../../stylesheets/inspection_forms.scss';
 import Section from '../../components/inspections/section';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Query } from 'react-apollo';
-import { useMutation } from "@apollo/react-hooks";
+import { Query, Mutation } from 'react-apollo';
 import { getPeriodicInspectionQuery, savePeriodicMutation } from '../../queries/inspections';
 import { RouteComponentProps } from 'react-router';
 
@@ -174,14 +173,13 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
     return data;
   }
 
-  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>, saveInspection) => {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
     debugger;
 // invalid hook call when saving inspection
 
-    const [saveInspection] = useMutation(savePeriodicMutation);
     saveInspection({
       variables: {data: data}
     }).then(({data: {savePeriodic: {status, errors, periodicInspection}}}) => {
@@ -299,19 +297,23 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
             {this.renderAlert()}
 
             <div id="periodic-inspection-form">
-            <form onSubmit={this.handleSubmit} >
-              <div className="form-group">
-                <label htmlFor="date">Date</label>
-                <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
-              </div>
+              <Mutation mutation={savePeriodicMutation}>
+                {(savePeriodic) => (
+                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) =>this.handleSubmit(e, savePeriodic)} >
+                  <div className="form-group">
+                    <label htmlFor="date">Date</label>
+                    <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
+                  </div>
 
-              {this.state.sectionsAttributes ?
-                this.renderSections() : null }
+                  {this.state.sectionsAttributes ?
+                    this.renderSections() : null }
 
-              <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>
+                  <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>
 
-              {this.renderUpdatedBy()}
-            </form>
+                  {this.renderUpdatedBy()}
+                </form>
+                )}
+              </Mutation>
             </div>
           </>
         }}
