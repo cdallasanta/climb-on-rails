@@ -172,13 +172,10 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
 
     return data;
   }
-
+// TODO: figure out typing of the mutation
   handleSubmit = (event: React.FormEvent<HTMLFormElement>, saveInspection) => {
     event.preventDefault();
     const data = this.gatherDataFromState();
-
-    debugger;
-// invalid hook call when saving inspection
 
     saveInspection({
       variables: {data: data}
