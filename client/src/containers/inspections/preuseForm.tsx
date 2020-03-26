@@ -5,7 +5,7 @@ import Setup from '../../components/inspections/setup';
 import Takedown from '../../components/inspections/takedown';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Query, graphql } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import { getPreuseInspectionQuery, savePreuseMutation } from '../../queries/inspections';
 import { RouteComponentProps } from 'react-router';
 
@@ -274,11 +274,11 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
     return data;
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>, savePreuseMutation) => {
     event.preventDefault();
     const data = this.gatherDataFromState();
 
-    this.props.savePreuseMutation({
+    savePreuseMutation({
       variables: {data: data}
     }).then(({data: {savePreuse: {status, errors, preuseInspection}}}) => {
       if (status === "200"){
@@ -371,30 +371,36 @@ class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
           {this.renderAlert()}
 
           <div id="preuse-inspection-form">
-            <form onSubmit={this.handleSubmit.bind(this)} >
-              <div className="form-group">
-                <label htmlFor="date">Date</label>
-                <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
-              </div>
+            <Mutation mutation={savePreuseMutation}>
+              {(savePreuseMutation) => (
+                <form onSubmit={(e: React.FormEvent<HTMLFormElement>) =>this.handleSubmit(e, savePreuseMutation)} >
+                  <div className="form-group">
+                    <label htmlFor="date">Date</label>
+                    <DatePicker selected={this.state.date} name="date" className="form-control-sm" onChange={this.handleDateChange} />
+                  </div>
 
-              {this.state.setupAttributes ?
-                <Setup data={this.state.setupAttributes}
-                  renderUpdatedBy={this.renderUpdatedBy}
-                  handleChange={this.handleChange}
-                  instructions={this.state.instructions.setup}
-                  newComments={this.state.newComments.setup}
-                /> : null}
+                  {this.state.setupAttributes ?
+                    <Setup data={this.state.setupAttributes}
+                      renderUpdatedBy={this.renderUpdatedBy}
+                      handleChange={this.handleChange}
+                      instructions={this.state.instructions.setup}
+                      newComments={this.state.newComments.setup}
+                    /> : null
+                  }
 
-              {this.state.takedownAttributes ?
-                <><hr /><Takedown data={this.state.takedownAttributes}
-                  renderUpdatedBy={this.renderUpdatedBy}
-                  handleChange={this.handleChange}
-                  instructions={this.state.instructions.takedown}
-                  newComments={this.state.newComments.takedown}
-                /></> : null}
+                  {this.state.takedownAttributes ?
+                    <><hr /><Takedown data={this.state.takedownAttributes}
+                      renderUpdatedBy={this.renderUpdatedBy}
+                      handleChange={this.handleChange}
+                      instructions={this.state.instructions.takedown}
+                      newComments={this.state.newComments.takedown}
+                    /></> : null
+                  }
 
-                <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>
-              </form>
+                  <input type="submit" id="submit-button" value={this.state.changed ? "Submit": "No changes yet"} disabled={!this.state.changed}/>
+                </form>
+              )}
+            </Mutation>
             </div>
           </>
         }}
