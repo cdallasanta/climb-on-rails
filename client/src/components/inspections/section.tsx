@@ -16,7 +16,7 @@ interface Props {
   newComment: string,
   instructions: string,
   handleChange: (e: any) => void,
-  inspection: any
+  inspection?: any
 } // TODO: fix the typing above
 
 const Section = ({data: {id, title, complete, commentsAttributes}, newComment, instructions, handleChange, inspection}: Props) => {

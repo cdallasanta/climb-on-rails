@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import "../stylesheets/global.scss";
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-// ^ Switch, Route,
-// import AdminContainer from './admin';
-// import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
-// import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
+import { Switch, Route,withRouter, RouteComponentProps } from 'react-router-dom';
+import AdminContainer from './admin';
+import PreuseInspectionContainer from './inspections/preuseInspectionContainer';
+import PeriodicInspectionContainer from './inspections/periodicInspectionContainer';
 import Header from '../components/header';
 import * as images from '../images/index';
 import Dashboard from '../components/dashboard';
@@ -49,7 +48,7 @@ class Home extends Component<Props> {
         <Header handleLogout={this.props.handleLogout} />
 
         <div id="body">
-          {/* <Switch>
+          <Switch>
             <Route path="/preuse_inspections"
               component={PreuseInspectionContainer}
             />
@@ -59,7 +58,7 @@ class Home extends Component<Props> {
             <Route path="/admin"
               component={AdminContainer}
             />
-          </Switch> */}
+          </Switch>
           <Dashboard />
         </div>
       </div>
