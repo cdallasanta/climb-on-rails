@@ -7,11 +7,114 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Query, graphql } from 'react-apollo';
 import { getPreuseInspectionQuery, savePreuseMutation } from '../../queries/inspections';
+import { RouteComponentProps } from 'react-router';
 
-class PreuseForm extends Component {
+interface State {
+  id: number | null,
+  date: Date,
+  instructions: {
+    setup: {
+      equipmentInstructions: string,
+      elementInstructions: string,
+      environmentInstructions: string,
+    },
+    takedown: {
+      equipmentInstructions: string,
+      elementInstructions: string,
+      environmentInstructions: string,
+    }
+  },
+  elementId: number,
+  newComments: {
+    setup:{
+      Equipment: {content: string},
+      Element: {content: string},
+      Environment: {content: string}
+    },
+    takedown:{
+      Equipment: {content: string},
+      Element: {content: string},
+      Environment: {content: string}
+    }
+  },
+  setupAttributes: SetupAttributes | undefined,
+  takedownAttributes: TakedownAttributes | undefined,
+  alertMessage: {message: string[], type: string},
+  changed: boolean
+}
+
+interface Response {
+  id: number,
+  setupEquipmentInstructions: string,
+  setupElementInstructions: string,
+  setupEnvironmentInstructions: string,
+  takedownEquipmentInstructions: string,
+  takedownElementInstructions: string,
+  takedownEnvironmentInstructions: string,
+  preuseInspection: {
+    id: number
+    setupAttributes: SetupAttributes,
+    takedownAttributes: TakedownAttributes
+  }
+}
+
+interface MatchParams {
+  element_id: string
+}
+
+interface SetupAttributes {
+  id: number,
+  sectionsAttributes: Section[]
+}
+
+interface TakedownAttributes {
+  id: number,
+  sectionsAttributes: Section[]
+  climbsAttributes: Climb[]
+}
+
+interface Section {
+  id: number,
+  title: string,
+  complete: boolean,
+  commentsAttributes: {
+    id: number,
+    content: string,
+    user: {
+      fullname: string;
+    }
+  }[]
+}
+
+interface Climb {
+  id: number;
+  rope: {identifier: string};
+  block1: number;
+  block2: number;
+  block3: number;
+  block4: number;
+}
+
+interface User {
+  fullname: string
+}
+
+class PreuseForm extends Component<RouteComponentProps<MatchParams>, State> {
   state = {
+    id: null,
     date: new Date(),
-    instructions: {},
+    instructions: {
+      setup: {
+        equipmentInstructions: "",
+        elementInstructions: "",
+        environmentInstructions: "",
+      },
+      takedown: {
+        equipmentInstructions: "",
+        elementInstructions: "",
+        environmentInstructions: "",
+      }
+    },
     elementId: parseInt(this.props.match.params.element_id),
     newComments: {
       setup:{
@@ -25,8 +128,10 @@ class PreuseForm extends Component {
         Environment: {content: ""}
       }
     },
-    alertMessage: {},
-    changed: false
+    alertMessage: {message: [], type: ""},
+    changed: false,
+    setupAttributes: undefined,
+    takedownAttributes: undefined
   }
 
   resetTextboxes = () => {
@@ -52,7 +157,7 @@ class PreuseForm extends Component {
       const {name, value} = event.target;
       const climbId = parseInt(event.target.getAttribute('climb-id'));
 
-      this.setState(state => {
+      this.setState((state: State) => {
         const {takedownAttributes} = state;
         const climb = takedownAttributes.climbsAttributes.find(r => r.id === climbId);
         climb[name] = parseInt(value);
@@ -82,20 +187,20 @@ class PreuseForm extends Component {
         return Object.assign({}, state, {[`${inspection}Attributes`]: newAttrs})
       });
     }
-    this.setState({changed: true, alertMessage: {}});
+    this.setState({changed: true, alertMessage: {message: [], type: ""}});
   }
 
-  handleDateChange = date => {
+  handleDateChange = (date: Date) => {
     this.setState({date: date})
   }
 
   // intentionally not using an arrow function so children will use the correct "this"
-  renderUpdatedBy(){
-    if (typeof(this.data) !== "undefined" && this.data.users.length > 0) {
+  renderUpdatedBy(users: User[]){
+    if (users.length > 0) {
       return (
         <div className="updated-by form-group">
           <h3>Updated by:</h3>
-          {this.data.users.map((user, i) => {
+          {users.map((user, i) => {
             return <React.Fragment key={i}>
               {user.fullname}<br/>
             </React.Fragment>
@@ -114,7 +219,7 @@ class PreuseForm extends Component {
     };
 
     //clean up unneeded user data from comments
-    setupAttributes.sectionsAttributes.forEach(section => {
+    setupAttributes.sectionsAttributes.forEach((section: Section) => {
       section.commentsAttributes.forEach(comment => {
         delete comment.user
       })
@@ -210,22 +315,25 @@ class PreuseForm extends Component {
     }
   }
 
-  queryCompleted = resp => {
+  queryCompleted = (resp: Response) => {
     if (resp.preuseInspection.id !== null){
       this.props.history.push(`/preuse_inspections/elements/${resp.id}/edit`);
-      this.setState({alertMessage: {
-        type:"info",
-        message:["Previous inspection loaded"],
-        changed: false}});
+      this.setState({
+        alertMessage: {
+          type:"info",
+          message:["Previous inspection loaded"]
+        },
+        changed: false
+      });
     } else {
       this.props.history.push(`/preuse_inspections/elements/${resp.id}/new`);
-      this.setState({alertMessage: {}, changed: false});
+      this.setState({alertMessage: {message: [], type: ""}, changed: false});
     }
     this.resetTextboxes();
     this.updateStateFromQuery(resp);
   }
 
-  updateStateFromQuery = data => {
+  updateStateFromQuery = (data: Response) => {
     this.setState({
       id: data.preuseInspection.id,
       setupAttributes: data.preuseInspection.setupAttributes,
@@ -295,6 +403,4 @@ class PreuseForm extends Component {
   }
 }
 
-export default graphql(savePreuseMutation, {
-  name: "savePreuseMutation"
-})(PreuseForm);
+export default PreuseForm;

@@ -10,8 +10,12 @@ interface Props{
     Equipment: {content: string},
     Environment: {content: string}
   };
-  renderUpdatedBy: () => void;
+  renderUpdatedBy: (users: User[]) => React.ReactNode
 } // TODO: fix the typing of handleChange
+
+interface User {
+  fullname: string
+}
 
 interface Climb {
   id: number;
@@ -103,7 +107,7 @@ class Takedown extends Component<Props> {
 
         {this.renderSections()}
 
-        {this.props.renderUpdatedBy()}
+        {this.props.renderUpdatedBy(this.props.data.users)}
       </div>
     )
   }

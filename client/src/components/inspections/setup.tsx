@@ -10,8 +10,12 @@ interface Props{
     Equipment: {content: string},
     Environment: {content: string}
   },
-  renderUpdatedBy: () => void
+  renderUpdatedBy: (users: User[]) => React.ReactNode
 } // TODO: fix the typing of handleChange
+
+interface User {
+  fullname: string
+}
 
 class Setup extends Component<Props> {
   renderSections = () => {
@@ -43,7 +47,7 @@ class Setup extends Component<Props> {
         <h1>Setup</h1>
         {this.renderSections()}
 
-        {this.props.renderUpdatedBy()}
+        {this.props.renderUpdatedBy(this.props.data.users)}
       </div>
     )
   }
