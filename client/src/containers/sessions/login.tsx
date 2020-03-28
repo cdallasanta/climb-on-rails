@@ -95,7 +95,7 @@ class Login extends Component<Props, State> {
 
         <div id="login-form-div">
           <h1>Welcome to<br />
-          Climb On!v2</h1>
+          Climb On! - test</h1>
 
           <form id="login-form" onSubmit={this.handleSubmit}>
             <div>
