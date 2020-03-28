@@ -75,7 +75,7 @@ class Login extends Component {
 
         <div id="login-form-div">
           <h1>Welcome to<br />
-          Climb On!</h1>
+          Climb On! - tests</h1>
 
           <form id="login-form" onSubmit={this.handleSubmit}>
             <div>
