@@ -4,13 +4,8 @@ module Types
     field :name, String, null: false
     field :elements, [ElementType], null: true
     field :contact, UserType, null: true
-    field :time, String, null: false
     field :status, [StatusType], null: true do
       argument :date, String, required: false
-    end
-
-    def time
-      Time.now.strftime("%l:%M%P")
     end
 
     def status(**args)
@@ -36,8 +31,7 @@ module Types
 
         elementsStatus << status
       end
-      
-      # elementsStatus["time"] = DateTime.now
+
       elementsStatus
     end
   end

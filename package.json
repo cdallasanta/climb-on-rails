@@ -27,8 +27,5 @@
   "license": "GNU",
   "bugs": {
     "url": "https://github.com/cdallasanta/climb-on/issues"
-  },
-  "dependencies": {
-    "@types/react-addons-css-transition-group": "^15.0.5"
   }
 }
