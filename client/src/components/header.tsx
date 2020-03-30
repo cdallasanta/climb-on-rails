@@ -57,8 +57,7 @@ class Header extends React.Component<Props> {
           <NavLink to="/elements" className="nav-link" activeClassName="selected">My Profile (in development)</NavLink>
         </div>
         <div>
-          <NavLink to="/" className="nav-link" activeClassName="selected"
-          onClick={this.props.handleLogout} >Logout</NavLink>
+          <NavLink to="/" className="nav-link" onClick={this.props.handleLogout} >Logout</NavLink>
         </div>
         
         <img src={require(`../images/logo.png`)} alt="logo" />
