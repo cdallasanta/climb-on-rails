@@ -9,10 +9,10 @@ module Mutations
     def resolve(**args)
       @params = args[:data].to_h
       
-      if @params["id"]
-        @inspection = PeriodicInspection.find(@params["id"])
+      if @params[:id]
+        @inspection = PeriodicInspection.find(@params[:id])
       else
-        @inspection = PeriodicInspection.new(element_id: @params["element_id"])
+        @inspection = PeriodicInspection.new(element_id: @params[:element_id])
       end
       save_and_return
     end
@@ -26,7 +26,7 @@ module Mutations
       current_user = context[:current_user]
 
       # TODO there has to be a better way to deal with :after_initialize and it's relics
-      if @inspection.id == nil
+      if @inspection.id.nil?
         @inspection.sections = []
       end
       
@@ -54,11 +54,11 @@ module Mutations
     end
     
     def remove_empty_comments
-      @params["sections_attributes"].each do |section|
-        section["comments_attributes"].delete_if do |comment|
-          comment["content"] == ""
+      @params[:sections_attributes].each do |section|
+        section[:comments_attributes].delete_if do |comment|
+          comment[:content] == ""
         end
-        section["comments_attributes"].each do |comment|
+        section[:comments_attributes].each do |comment|
           if comment[:user_id] == nil
             comment[:user_id] = context[:current_user].id
           end

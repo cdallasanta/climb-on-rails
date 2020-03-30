@@ -9,7 +9,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import {BrowserRouter as Router} from 'react-router-dom';
 
 const link = createHttpLink({
-  uri: '/graphql',
+  uri: 'http://localhost:3001/graphql',
   credentials: 'include'
 });
 

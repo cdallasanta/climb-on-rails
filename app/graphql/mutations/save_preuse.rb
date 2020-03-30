@@ -10,10 +10,10 @@ module Mutations
       check_authentication!
       @params = args[:data].to_h
       
-      if @params["id"]
-        @inspection = PreuseInspection.find(@params["id"])
+      if @params[:id]
+        @inspection = PreuseInspection.find(@params[:id])
       else
-        @inspection = PreuseInspection.new(element_id: @params["element_id"])
+        @inspection = PreuseInspection.new(element_id: @params[:element_id])
       end
       save_and_return
     end
@@ -63,28 +63,28 @@ module Mutations
 
     def clean_up_params
       remove_empty_comments
-      @params = @params.except("takedown_attributes") if @params["takedown_attributes"] == nil
+      @params = @params.except("takedown_attributes") if @params[:takedown_attributes] == nil
     end
 
     
     def remove_empty_comments
-      @params["setup_attributes"]["sections_attributes"].each do |section|
-        section["comments_attributes"].delete_if do |comment|
-          comment["content"] == ""
+      @params[:setup_attributes][:sections_attributes].each do |section|
+        section[:comments_attributes].delete_if do |comment|
+          comment[:content] == ""
         end
-        section["comments_attributes"].each do |comment|
+        section[:comments_attributes].each do |comment|
           if comment[:user_id] == nil
             comment[:user_id] = context[:current_user].id
           end
         end
       end
 
-      if (@params["takedown_attributes"])
-        @params["takedown_attributes"]["sections_attributes"].each do |section|
-          section["comments_attributes"].delete_if do |comment|
-            comment["content"] == ""
+      if (@params[:takedown_attributes])
+        @params[:takedown_attributes][:sections_attributes].each do |section|
+          section[:comments_attributes].delete_if do |comment|
+            comment[:content] == ""
           end
-          section["comments_attributes"].each do |comment|
+          section[:comments_attributes].each do |comment|
             if comment[:user_id] == nil
               comment[:user_id] = context[:current_user].id
             end

@@ -170,12 +170,14 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
       sectionsAttributes: JSON.parse(JSON.stringify(this.state.sectionsAttributes))
     } // used JSON to deeply copy the state array - lodash is an alternative if I want to import it
 
-    data.sectionsAttributes.forEach((section: NewSection) => {
+    data.sectionsAttributes.forEach((section: Section) => {
       // remove user key, since graphql doesn't accept it
-      // section.commentsAttributes?.forEach(comment => {
-      //   delete comment.user;
-      // })
+      section.commentsAttributes?.forEach(comment => {
+        delete comment.user;
+      })
+    })
 
+    data.sectionsAttributes.forEach((section: NewSection) => {
       // add in new comments
       const matchedComment = this.state.newComments[(section.title as "Equipment" | "Element" | "Environment")];
       section.commentsAttributes?.push({
@@ -183,7 +185,7 @@ class PeriodicForm extends Component<RouteComponentProps<MatchParams>, State> {
         content: matchedComment.content
       })
     });
-
+    
     return data;
   }
 // TODO: figure out typing of the mutation
