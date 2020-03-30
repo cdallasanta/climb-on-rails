@@ -17,9 +17,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm install && npm run build && cd ..",
     "deploy": "cp -a client/build/. public/",
-    "heroku-postbuild": "npm run build && npm run deploy && echo 'Client built!'"
+    "postinstall": "npm run build && npm run deploy && echo 'Client built!'"
   },
-  "heroku-run-build-script": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cdallasanta/climb-on.git"
