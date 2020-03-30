@@ -1,8 +1,7 @@
-module Types
-  class UserType < Types::BaseObject
-    field :id, ID, null: false
-    field :fullname, String, null: false
-    field :site, SiteType, null: false
-
-  end
+class Types::UserType < Types::BaseObject
+  field :id, Integer, null: false
+  field :fullname, String, null: false
+  field :site, Types::SiteType, null: false
+  field :is_complete, Boolean, null: false
 end
+# Types::UserType = GraphQL::ObjectType.define do

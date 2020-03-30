@@ -1,9 +1,9 @@
-Inputs::ClimbInput = GraphQL::InputObjectType.define do
-  name "ClimbInput"
+class Inputs::ClimbInput < Types::BaseInputObject
+  graphql_name "ClimbInput"
 
-  argument :id, types.ID
-  argument :block1, types.Int, as: :block_1
-  argument :block2, types.Int, as: :block_2
-  argument :block3, types.Int, as: :block_3
-  argument :block4, types.Int, as: :block_4
+  argument :id, Integer, required: true
+  argument :block1, Integer, as: :block_1, required: true
+  argument :block2, Integer, as: :block_2, required: true
+  argument :block3, Integer, as: :block_3, required: true
+  argument :block4, Integer, as: :block_4, required: true
 end

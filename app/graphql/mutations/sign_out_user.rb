@@ -1,5 +1,5 @@
 module Mutations
-  class SignOutUser < BaseMutation
+  class SignOutUser < Mutations::BaseMutation
     field :status, Integer, null: false
     field :logged_out, Boolean, null: false
 

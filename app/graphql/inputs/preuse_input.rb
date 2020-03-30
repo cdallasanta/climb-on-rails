@@ -1,9 +1,9 @@
-Inputs::PreuseInput = GraphQL::InputObjectType.define do
-  name "PreuseInput"
+class Inputs::PreuseInput < Types::BaseInputObject
+  graphql_name "PreuseInput"
 
-  argument :id, types.ID
-  argument :date, types.String
-  argument :elementId, types.ID, as: :element_id
-  argument :setupAttributes, Inputs::SetupInput, as: :setup_attributes
-  argument :takedownAttributes, Inputs::TakedownInput, as: :takedown_attributes
+  argument :id, Integer, required: false
+  argument :date, String, required: true
+  argument :elementId, Integer, as: :element_id, required: true
+  argument :setupAttributes, Inputs::SetupInput, as: :setup_attributes, required: true
+  argument :takedownAttributes, Inputs::TakedownInput, as: :takedown_attributes, required: false
 end

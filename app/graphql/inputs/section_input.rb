@@ -1,8 +1,8 @@
-Inputs::SectionInput = GraphQL::InputObjectType.define do
-  name "SectionInput"
+class Inputs::SectionInput < Types::BaseInputObject
+  graphql_name "SectionInput"
 
-  argument :id, types.ID
-  argument :title, types.String
-  argument :complete, types.Boolean
-  argument :commentsAttributes, types[Inputs::CommentInput], as: :comments_attributes
+  argument :id, Integer, required: true
+  argument :title, String, required: true
+  argument :complete, Boolean, required: true
+  argument :commentsAttributes, [Inputs::CommentInput], as: :comments_attributes, required: true
 end

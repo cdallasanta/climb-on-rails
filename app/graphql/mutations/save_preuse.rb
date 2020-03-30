@@ -1,5 +1,5 @@
 module Mutations
-  class SavePreuse < BaseMutation
+  class SavePreuse < Mutations::BaseMutation
     argument :data, Inputs::PreuseInput, required: true
 
     field :status, String, null: false

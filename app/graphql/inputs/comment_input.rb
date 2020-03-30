@@ -1,6 +1,6 @@
-Inputs::CommentInput = GraphQL::InputObjectType.define do
-  name "CommentInput"
+class Inputs::CommentInput < Types::BaseInputObject
+  graphql_name "CommentInput"
 
-  argument :content, types.String
-  argument :id, types.ID
+  argument :content, String, required: true
+  argument :id, Integer, required: false
 end

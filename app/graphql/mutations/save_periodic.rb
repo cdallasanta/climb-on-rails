@@ -1,5 +1,5 @@
 module Mutations
-  class SavePeriodic < BaseMutation
+  class SavePeriodic < Mutations::BaseMutation
     argument :data, Inputs::PeriodicInput, required: true
 
     field :status, String, null: false

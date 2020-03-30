@@ -1,7 +1,7 @@
-Inputs::TakedownInput = GraphQL::InputObjectType.define do
-  name "TakedownInput"
+class Inputs::TakedownInput < Types::BaseInputObject
+  graphql_name "TakedownInput"
 
-  argument :id, types.ID
-  argument :sectionsAttributes, types[Inputs::SectionInput], as: :sections_attributes
-  argument :climbsAttributes, types[Inputs::ClimbInput], as: :climbs_attributes
+  argument :id, Integer, required: true
+  argument :sectionsAttributes, [Inputs::SectionInput], as: :sections_attributes, required: true
+  argument :climbsAttributes, [Inputs::ClimbInput], as: :climbs_attributes, required: true
 end

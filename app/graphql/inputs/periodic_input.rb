@@ -1,8 +1,8 @@
-Inputs::PeriodicInput = GraphQL::InputObjectType.define do
-  name "PeriodicInput"
+class Inputs::PeriodicInput < Types::BaseInputObject
+  graphql_name "PeriodicInput"
 
-  argument :id, types.ID
-  argument :date, types.String
-  argument :elementId, types.ID, as: :element_id
-  argument :sectionsAttributes, types[Inputs::SectionInput], as: :sections_attributes
+  argument :id, Integer, required: false
+  argument :date, String, required: true
+  argument :elementId, Integer, as: :element_id, required: true
+  argument :sectionsAttributes, [Inputs::SectionInput], as: :sections_attributes, required: true
 end

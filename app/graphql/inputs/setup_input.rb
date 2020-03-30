@@ -1,6 +1,6 @@
-Inputs::SetupInput = GraphQL::InputObjectType.define do
-  name "SetupInput"
+class Inputs::SetupInput < Types::BaseInputObject
+  graphql_name "SetupInput"
 
-  argument :id, types.ID
-  argument :sectionsAttributes, types[Inputs::SectionInput], as: :sections_attributes
+  argument :id, Integer, required: true
+  argument :sectionsAttributes, [Inputs::SectionInput], as: :sections_attributes, required: true
 end
